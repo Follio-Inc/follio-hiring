@@ -1,0 +1,13 @@
+{
+  "plugins": {
+    "figma": {
+      "enabled": true
+    },
+    "vercel": {
+      "enabled": true
+    },
+    "notion-workspace": {
+      "enabled": true
+    }
+  }
+}
