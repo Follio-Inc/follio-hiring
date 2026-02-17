@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Folio Hiring — AI-Powered Recruiter Dashboard",
+  title: "Follio Hire — AI-Powered Recruiter Dashboard",
   description: "Screen candidates faster with AI-generated fit scores, adaptive portfolios, and intelligent comparison tools.",
 };
 

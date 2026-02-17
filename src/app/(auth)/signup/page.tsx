@@ -43,7 +43,7 @@ export default function SignupPage() {
             className="object-contain"
           />
           <span className="text-xl font-semibold bg-gradient-to-r from-violet-600 to-violet-400 bg-clip-text text-transparent">Follio</span>
-          <span className="text-xs font-medium text-muted-foreground mt-0.5">Hiring</span>
+          <span className="text-xs font-medium text-muted-foreground mt-0.5">Hire</span>
         </div>
 
         <h2 className="text-2xl font-bold text-foreground mb-1 text-center">Create your account</h2>

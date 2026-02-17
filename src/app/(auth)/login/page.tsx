@@ -47,7 +47,7 @@ export default function LoginPage() {
               className="object-contain"
             />
             <span className="text-2xl font-semibold text-white">Follio</span>
-            <span className="text-sm font-medium text-violet-200 mt-1">Hiring</span>
+            <span className="text-sm font-medium text-violet-200 mt-1">Hire</span>
           </div>
 
           <h1 className="text-4xl font-bold text-white leading-tight mb-4">
@@ -88,7 +88,7 @@ export default function LoginPage() {
               className="object-contain"
             />
             <span className="text-xl font-semibold bg-gradient-to-r from-violet-600 to-violet-400 bg-clip-text text-transparent">Follio</span>
-            <span className="text-xs font-medium text-muted-foreground mt-0.5">Hiring</span>
+            <span className="text-xs font-medium text-muted-foreground mt-0.5">Hire</span>
           </div>
 
           <h2 className="text-2xl font-bold text-foreground mb-1">Welcome back</h2>
