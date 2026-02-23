@@ -428,4 +428,184 @@ export function getApplicationsForCandidate(candidateId: string, jobId: string):
   return mockApplications.find(a => a.candidateId === candidateId && a.jobId === jobId);
 }
 
+// ============================================================
+// Additional Candidates — for richer per-job analytics
+// ============================================================
+
+function quickCandidate(
+  id: string, name: string, role: RoleType, title: string,
+  loc: string, years: number, skills: string[],
+): CandidateProfile {
+  return {
+    id, name,
+    email: `${name.split(' ')[0].toLowerCase()}${id.slice(-2)}@email.com`,
+    avatarUrl: '', roleType: role, title, location: loc,
+    yearsOfExperience: years, skills,
+    bio: `${title} with ${years} years of experience specializing in ${skills.slice(0, 3).join(', ')}.`,
+  };
+}
+
+candidates.push(
+  // ---- Developers (cand_11 – cand_28, cand_44 – cand_51) ----
+  quickCandidate('cand_11', 'Tom Anderson', 'developer', 'Frontend Developer', 'Portland, OR', 4, ['React', 'TypeScript', 'CSS', 'Vue.js', 'Jest']),
+  quickCandidate('cand_12', 'Nina Kowalski', 'developer', 'Senior Software Engineer', 'Denver, CO', 6, ['React', 'TypeScript', 'Node.js', 'GraphQL', 'AWS']),
+  quickCandidate('cand_13', 'Carlos Vega', 'developer', 'Junior Frontend Developer', 'Miami, FL', 2, ['React', 'JavaScript', 'CSS', 'HTML']),
+  quickCandidate('cand_14', 'Yuki Tanaka', 'developer', 'Full Stack Engineer', 'Tokyo, Japan', 7, ['React', 'TypeScript', 'Python', 'Docker', 'PostgreSQL']),
+  quickCandidate('cand_15', 'Rachel Green', 'developer', 'Frontend Developer', 'Boston, MA', 3, ['React', 'TypeScript', 'CSS', 'Testing', 'Storybook']),
+  quickCandidate('cand_16', 'Omar Hassan', 'developer', 'Software Engineer', 'Amsterdam, NL', 5, ['React', 'TypeScript', 'Next.js', 'AWS', 'GraphQL']),
+  quickCandidate('cand_17', 'Zoe Williams', 'developer', 'Frontend Developer', 'Los Angeles, CA', 4, ['React', 'JavaScript', 'CSS', 'Redux', 'Storybook']),
+  quickCandidate('cand_18', 'Max Fischer', 'developer', 'Backend Developer', 'Munich, DE', 6, ['Node.js', 'TypeScript', 'PostgreSQL', 'Docker', 'Redis']),
+  quickCandidate('cand_19', 'Anya Petrov', 'developer', 'Full Stack Developer', 'Prague, CZ', 3, ['React', 'Node.js', 'MongoDB', 'Docker', 'JavaScript']),
+  quickCandidate('cand_20', 'Ben Taylor', 'developer', 'Backend Engineer', 'Sydney, AU', 4, ['Node.js', 'Python', 'PostgreSQL', 'AWS', 'Docker']),
+  quickCandidate('cand_21', 'Luna Chen', 'developer', 'Senior Backend Engineer', 'Vancouver, CA', 5, ['Node.js', 'TypeScript', 'PostgreSQL', 'Redis', 'Kubernetes']),
+  quickCandidate('cand_22', 'Jake Morrison', 'developer', 'Backend Developer', 'Atlanta, GA', 3, ['Node.js', 'Express', 'MySQL', 'Docker', 'REST APIs']),
+  quickCandidate('cand_23', 'Hannah Lee', 'developer', 'Frontend Developer', 'Seoul, KR', 5, ['React', 'TypeScript', 'Next.js', 'CSS', 'GraphQL']),
+  quickCandidate('cand_24', 'Sam Carter', 'developer', 'Software Engineer', 'Chicago, IL', 4, ['React', 'TypeScript', 'Node.js', 'Docker', 'Testing']),
+  quickCandidate('cand_25', 'Mila Novak', 'developer', 'Full Stack Developer', 'Zagreb, HR', 3, ['React', 'JavaScript', 'Node.js', 'PostgreSQL', 'CSS']),
+  quickCandidate('cand_26', 'Daniel Park', 'developer', 'Frontend Engineer', 'Los Angeles, CA', 6, ['React', 'TypeScript', 'Next.js', 'GraphQL', 'Testing']),
+  quickCandidate('cand_27', 'Isabella Rossi', 'developer', 'Backend Engineer', 'Rome, IT', 4, ['Node.js', 'TypeScript', 'PostgreSQL', 'Docker', 'Redis']),
+  quickCandidate('cand_28', 'Andre Williams', 'developer', 'Full Stack Engineer', 'Houston, TX', 5, ['React', 'Node.js', 'TypeScript', 'PostgreSQL', 'AWS']),
+  quickCandidate('cand_44', 'Josh Reeves', 'developer', 'React Developer', 'Phoenix, AZ', 3, ['React', 'JavaScript', 'CSS', 'HTML', 'Redux']),
+  quickCandidate('cand_45', 'Fatima Al-Rashidi', 'developer', 'Senior Frontend Dev', 'Dubai, UAE', 7, ['React', 'TypeScript', 'Next.js', 'GraphQL', 'Testing']),
+  quickCandidate('cand_46', 'Patrick O\'Neal', 'developer', 'Frontend Developer', 'Dublin, IE', 4, ['React', 'TypeScript', 'CSS', 'Storybook', 'Jest']),
+  quickCandidate('cand_47', 'Kim Soo-yeon', 'developer', 'Software Engineer', 'Seoul, KR', 5, ['React', 'TypeScript', 'Next.js', 'Node.js', 'AWS']),
+  quickCandidate('cand_48', 'Viktor Popov', 'developer', 'Backend Engineer', 'Moscow, RU', 4, ['Node.js', 'TypeScript', 'PostgreSQL', 'Docker', 'Redis']),
+  quickCandidate('cand_49', 'Amara Diallo', 'developer', 'Full Stack Dev', 'Dakar, SN', 3, ['React', 'Node.js', 'JavaScript', 'MongoDB', 'CSS']),
+  quickCandidate('cand_50', 'Lucas Schmidt', 'developer', 'Backend Developer', 'Berlin, DE', 6, ['Node.js', 'TypeScript', 'PostgreSQL', 'Kubernetes', 'Redis']),
+  quickCandidate('cand_51', 'Elena Volkov', 'developer', 'Frontend Engineer', 'Kyiv, UA', 5, ['React', 'TypeScript', 'CSS', 'Next.js', 'Testing']),
+
+  // ---- Designers (cand_29 – cand_36, cand_52 – cand_55) ----
+  quickCandidate('cand_29', 'Mia Torres', 'designer', 'Product Designer', 'Barcelona, ES', 5, ['Figma', 'UI Design', 'User Research', 'Design Systems', 'Prototyping']),
+  quickCandidate('cand_30', 'Felix Müller', 'designer', 'UX Designer', 'Hamburg, DE', 3, ['Figma', 'User Research', 'Prototyping', 'Wireframing']),
+  quickCandidate('cand_31', 'Iris Chang', 'designer', 'Visual Designer', 'Singapore', 4, ['Figma', 'UI Design', 'Illustration', 'Branding']),
+  quickCandidate('cand_32', 'Noah Baker', 'designer', 'Senior Product Designer', 'Denver, CO', 6, ['Figma', 'Design Systems', 'Prototyping', 'User Research', 'UI Design']),
+  quickCandidate('cand_33', 'Ava Thompson', 'designer', 'UI Designer', 'Melbourne, AU', 2, ['Figma', 'UI Design', 'CSS', 'Prototyping']),
+  quickCandidate('cand_34', 'Leo Rossi', 'designer', 'UX/UI Designer', 'Milan, IT', 5, ['Figma', 'UI Design', 'User Research', 'Motion Design']),
+  quickCandidate('cand_35', 'Chloe Dubois', 'designer', 'Product Designer', 'Paris, FR', 4, ['Figma', 'UI Design', 'Design Systems', 'Prototyping']),
+  quickCandidate('cand_36', 'Wei Zhang', 'designer', 'Visual Designer', 'Shanghai, CN', 3, ['Figma', 'UI Design', 'Illustration', 'Branding', 'Prototyping']),
+  quickCandidate('cand_52', 'Ravi Patel', 'designer', 'Product Designer', 'Mumbai, IN', 5, ['Figma', 'UI Design', 'Design Systems', 'User Research', 'Prototyping']),
+  quickCandidate('cand_53', 'Clara Johansen', 'designer', 'UX Designer', 'Copenhagen, DK', 4, ['Figma', 'User Research', 'Prototyping', 'UI Design']),
+  quickCandidate('cand_54', 'Takeshi Yamamoto', 'designer', 'Visual Designer', 'Osaka, JP', 3, ['Figma', 'UI Design', 'Illustration', 'Prototyping']),
+  quickCandidate('cand_55', 'Olivia Brown', 'designer', 'Senior Product Designer', 'London, UK', 7, ['Figma', 'Design Systems', 'User Research', 'UI Design', 'Prototyping']),
+
+  // ---- PMs (cand_37 – cand_43, cand_56 – cand_58) ----
+  quickCandidate('cand_37', 'Diana Foster', 'pm', 'Product Manager', 'Washington, DC', 6, ['Product Strategy', 'Data Analysis', 'SQL', 'User Research', 'A/B Testing']),
+  quickCandidate('cand_38', 'Kevin Wu', 'pm', 'Senior Product Manager', 'San Francisco, CA', 9, ['Product Strategy', 'Roadmapping', 'A/B Testing', 'Data Analysis', 'SQL']),
+  quickCandidate('cand_39', 'Nadia Ali', 'pm', 'Product Manager', 'New York, NY', 4, ['User Research', 'Analytics', 'Roadmapping', 'Product Strategy']),
+  quickCandidate('cand_40', 'Chris Evans', 'pm', 'Associate PM', 'Remote', 3, ['Product Strategy', 'Jira', 'Analytics', 'Roadmapping']),
+  quickCandidate('cand_41', 'Maya Gupta', 'pm', 'Senior Product Manager', 'Bangalore, IN', 7, ['Product Strategy', 'Data Analysis', 'A/B Testing', 'SQL', 'Roadmapping']),
+  quickCandidate('cand_42', 'Thomas Bergström', 'pm', 'Product Manager', 'Stockholm, SE', 5, ['Product Strategy', 'User Research', 'SQL', 'Data Analysis']),
+  quickCandidate('cand_43', 'Sarah Okonkwo', 'pm', 'Product Manager', 'Lagos, NG', 4, ['Product Strategy', 'Analytics', 'Roadmapping', 'User Research']),
+  quickCandidate('cand_56', 'Raj Kapoor', 'pm', 'Product Manager', 'Delhi, IN', 5, ['Product Strategy', 'Data Analysis', 'User Research', 'Roadmapping', 'A/B Testing']),
+  quickCandidate('cand_57', 'Emma Larsson', 'pm', 'Senior PM', 'Gothenburg, SE', 8, ['Product Strategy', 'SQL', 'Data Analysis', 'Roadmapping', 'A/B Testing']),
+  quickCandidate('cand_58', 'Marco Bianchi', 'pm', 'Associate PM', 'Florence, IT', 2, ['Product Strategy', 'Analytics', 'Jira', 'User Research']),
+);
+
+// ============================================================
+// Additional Applications — for meaningful per-job funnels
+// ============================================================
+// Job 1 target: 30 (new:8 reviewing:6 shortlisted:5 interview:4 offer:2 rejected:5)
+// Job 2 target: 15 (new:4 reviewing:4 shortlisted:2 interview:2 offer:1 rejected:2)
+// Job 3 target: 14 (new:4 reviewing:3 shortlisted:3 interview:2 offer:1 rejected:1)
+// Job 4 target: 24 (new:7 reviewing:6 shortlisted:4 interview:3 offer:1 rejected:3)
+
+mockApplications.push(
+  // ---- Job 1: Senior Frontend Engineer (26 new → 30 total) ----
+  createApplication('cand_11', 'job_1', 'new', 3),
+  createApplication('cand_13', 'job_1', 'new', 2),
+  createApplication('cand_17', 'job_1', 'new', 1),
+  createApplication('cand_19', 'job_1', 'new', 4),
+  createApplication('cand_25', 'job_1', 'new', 3),
+  createApplication('cand_27', 'job_1', 'new', 1),
+  createApplication('cand_44', 'job_1', 'new', 2),
+  createApplication('cand_49', 'job_1', 'new', 4),
+  createApplication('cand_12', 'job_1', 'reviewing', 8, 3),
+  createApplication('cand_15', 'job_1', 'reviewing', 9),
+  createApplication('cand_23', 'job_1', 'reviewing', 7),
+  createApplication('cand_28', 'job_1', 'reviewing', 6),
+  createApplication('cand_46', 'job_1', 'reviewing', 5),
+  createApplication('cand_16', 'job_1', 'shortlisted', 11, 3),
+  createApplication('cand_24', 'job_1', 'shortlisted', 10, 3),
+  createApplication('cand_45', 'job_1', 'shortlisted', 12, 4),
+  createApplication('cand_14', 'job_1', 'interview', 13, 4),
+  createApplication('cand_26', 'job_1', 'interview', 12, 4),
+  createApplication('cand_51', 'job_1', 'interview', 11, 3),
+  createApplication('cand_47', 'job_1', 'offer', 14, 5),
+  createApplication('cand_21', 'job_1', 'offer', 14, 5),
+  createApplication('cand_18', 'job_1', 'rejected', 10),
+  createApplication('cand_20', 'job_1', 'rejected', 9),
+  createApplication('cand_22', 'job_1', 'rejected', 7),
+  createApplication('cand_48', 'job_1', 'rejected', 8),
+  createApplication('cand_50', 'job_1', 'rejected', 6),
+
+  // ---- Job 2: Product Designer (12 new → 15 total) ----
+  createApplication('cand_33', 'job_2', 'new', 2),
+  createApplication('cand_36', 'job_2', 'new', 1),
+  createApplication('cand_54', 'job_2', 'new', 3),
+  createApplication('cand_30', 'job_2', 'reviewing', 6),
+  createApplication('cand_35', 'job_2', 'reviewing', 7),
+  createApplication('cand_53', 'job_2', 'reviewing', 5),
+  createApplication('cand_29', 'job_2', 'shortlisted', 9, 3),
+  createApplication('cand_52', 'job_2', 'shortlisted', 8, 3),
+  createApplication('cand_31', 'job_2', 'interview', 10, 4),
+  createApplication('cand_55', 'job_2', 'offer', 13, 5),
+  createApplication('cand_34', 'job_2', 'rejected', 8),
+  createApplication('cand_32', 'job_2', 'rejected', 7),
+
+  // ---- Job 3: Senior Product Manager (12 new → 14 total) ----
+  createApplication('cand_39', 'job_3', 'new', 3),
+  createApplication('cand_40', 'job_3', 'new', 2),
+  createApplication('cand_58', 'job_3', 'new', 1),
+  createApplication('cand_43', 'job_3', 'reviewing', 6),
+  createApplication('cand_56', 'job_3', 'reviewing', 5),
+  createApplication('cand_37', 'job_3', 'shortlisted', 9, 3),
+  createApplication('cand_42', 'job_3', 'shortlisted', 8, 3),
+  createApplication('cand_38', 'job_3', 'interview', 11, 4),
+  createApplication('cand_57', 'job_3', 'interview', 10, 4),
+  createApplication('cand_41', 'job_3', 'offer', 13, 5),
+  createApplication('cand_11', 'job_3', 'reviewing', 7),
+  createApplication('cand_13', 'job_3', 'rejected', 6),
+
+  // ---- Job 4: Backend Engineer (22 new → 24 total) ----
+  createApplication('cand_11', 'job_4', 'new', 3),
+  createApplication('cand_17', 'job_4', 'new', 2),
+  createApplication('cand_25', 'job_4', 'new', 4),
+  createApplication('cand_44', 'job_4', 'new', 1),
+  createApplication('cand_49', 'job_4', 'new', 3),
+  createApplication('cand_13', 'job_4', 'new', 2),
+  createApplication('cand_12', 'job_4', 'reviewing', 7),
+  createApplication('cand_15', 'job_4', 'reviewing', 8),
+  createApplication('cand_19', 'job_4', 'reviewing', 6),
+  createApplication('cand_23', 'job_4', 'reviewing', 5),
+  createApplication('cand_46', 'job_4', 'reviewing', 7),
+  createApplication('cand_14', 'job_4', 'shortlisted', 10, 3),
+  createApplication('cand_24', 'job_4', 'shortlisted', 9, 3),
+  createApplication('cand_28', 'job_4', 'shortlisted', 11, 3),
+  createApplication('cand_45', 'job_4', 'shortlisted', 10, 4),
+  createApplication('cand_18', 'job_4', 'interview', 12, 4),
+  createApplication('cand_50', 'job_4', 'interview', 11, 4),
+  createApplication('cand_21', 'job_4', 'interview', 13, 4),
+  createApplication('cand_27', 'job_4', 'offer', 14, 5),
+  createApplication('cand_16', 'job_4', 'rejected', 8),
+  createApplication('cand_22', 'job_4', 'rejected', 6),
+  createApplication('cand_47', 'job_4', 'rejected', 7),
+);
+
+// ============================================================
+// Sync job metadata from actual application records
+// ============================================================
+
+for (const job of mockJobs) {
+  const jobApps = mockApplications.filter(a => a.jobId === job.id);
+  job.applicantCount = jobApps.length;
+  job.avgFitScore = Math.round(
+    jobApps.reduce((sum, a) => sum + a.fitScore, 0) / Math.max(jobApps.length, 1),
+  );
+  const bd: Record<ApplicationStage, number> = {
+    new: 0, reviewing: 0, shortlisted: 0, interview: 0, offer: 0, rejected: 0,
+  };
+  for (const app of jobApps) bd[app.stage]++;
+  job.stageBreakdown = bd;
+}
+
 export { candidates as mockCandidates };

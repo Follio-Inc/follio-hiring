@@ -128,8 +128,7 @@ export function computeJobAnalytics(
     return period === '7d' ? daysAgo <= 7 : daysAgo <= 30;
   });
 
-  const distribution: Record<ApplicationStage, number> =
-    period === 'all' ? { ...job.stageBreakdown } : computeDistribution(filtered);
+  const distribution: Record<ApplicationStage, number> = computeDistribution(filtered);
 
   const totalApplicants = Object.values(distribution).reduce(
     (sum, c) => sum + c,

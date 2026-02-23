@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { StageMetric, FUNNEL_STAGE_COLORS, FunnelStage } from '@/lib/analytics';
-import { cn } from '@/lib/utils';
-import { ChevronDown } from 'lucide-react';
 
 interface FunnelChartProps {
   stages: StageMetric[];
@@ -11,7 +9,11 @@ interface FunnelChartProps {
   rejected: number;
 }
 
-const MIN_WIDTH_PERCENT = 8;
+const SVG_WIDTH = 520;
+const LAYER_HEIGHT = 54;
+const LAYER_GAP = 2;
+const SIDE_PADDING = 10;
+const MIN_WIDTH_RATIO = 0.14;
 
 export function FunnelChart({
   stages,
@@ -22,18 +24,22 @@ export function FunnelChart({
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setMounted(true), 50);
-    return () => clearTimeout(timer);
+    const t = setTimeout(() => setMounted(true), 80);
+    return () => clearTimeout(t);
   }, []);
 
   if (totalApplicants === 0) return null;
 
   const maxCount = stages[0]?.count || 1;
+  const totalHeight =
+    stages.length * LAYER_HEIGHT + (stages.length - 1) * LAYER_GAP;
+  const centerX = SVG_WIDTH / 2;
+  const maxHalf = (SVG_WIDTH - SIDE_PADDING * 2) / 2;
+  const minHalf = maxHalf * MIN_WIDTH_RATIO;
 
-  function getWidthPercent(count: number): number {
-    if (maxCount === 0) return MIN_WIDTH_PERCENT;
-    const ratio = count / maxCount;
-    return MIN_WIDTH_PERCENT + (100 - MIN_WIDTH_PERCENT) * ratio;
+  function getHalfWidth(count: number) {
+    const ratio = maxCount > 0 ? count / maxCount : 0;
+    return minHalf + (maxHalf - minHalf) * ratio;
   }
 
   return (
@@ -61,64 +67,88 @@ export function FunnelChart({
         </div>
       </div>
 
-      <div className="space-y-1">
-        {stages.map((stage, i) => {
-          const widthPercent = getWidthPercent(stage.count);
-          const colors = FUNNEL_STAGE_COLORS[stage.stage as FunnelStage];
-          const isHovered = hoveredIndex === i;
+      {/* SVG Funnel */}
+      <div className="flex justify-center">
+        <svg
+          viewBox={`0 0 ${SVG_WIDTH} ${totalHeight}`}
+          className="w-full max-w-[560px] h-auto"
+          role="img"
+          aria-label="Hiring funnel visualization"
+        >
+          {stages.map((stage, i) => {
+            const y = i * (LAYER_HEIGHT + LAYER_GAP);
+            const topHalf = getHalfWidth(stage.count);
+            const nextCount =
+              i < stages.length - 1
+                ? stages[i + 1].count
+                : Math.max(stage.count * 0.4, 0);
+            const bottomHalf = getHalfWidth(nextCount);
+            const colors = FUNNEL_STAGE_COLORS[stage.stage as FunnelStage];
+            const isHovered = hoveredIndex === i;
 
-          return (
-            <div key={stage.stage}>
-              {/* Funnel bar */}
-              <div
-                className="relative mx-auto cursor-pointer group"
-                style={{ width: `${widthPercent}%` }}
+            const path = [
+              `M ${centerX - topHalf} ${y}`,
+              `L ${centerX + topHalf} ${y}`,
+              `L ${centerX + bottomHalf} ${y + LAYER_HEIGHT}`,
+              `L ${centerX - bottomHalf} ${y + LAYER_HEIGHT}`,
+              'Z',
+            ].join(' ');
+
+            return (
+              <g
+                key={stage.stage}
                 onMouseEnter={() => setHoveredIndex(i)}
                 onMouseLeave={() => setHoveredIndex(null)}
+                className="cursor-pointer"
               >
-                <div
-                  className={cn(
-                    'relative rounded-lg px-4 py-3 transition-all duration-700 ease-out overflow-hidden',
-                    isHovered ? 'shadow-lg scale-[1.02]' : 'shadow-sm',
-                  )}
+                <path
+                  d={path}
+                  fill={colors.fill}
                   style={{
-                    backgroundColor: colors.fill,
-                    opacity: isHovered ? 1 : 0.85,
-                    width: mounted ? '100%' : '0%',
-                    transitionProperty: 'width, opacity, box-shadow, transform',
-                    transitionDelay: `${i * 100}ms`,
+                    opacity: mounted ? (isHovered ? 1 : 0.82) : 0,
+                    filter: isHovered
+                      ? 'brightness(1.08) drop-shadow(0 2px 6px rgba(0,0,0,.15))'
+                      : 'none',
+                    transition: `opacity 0.5s ease ${i * 0.09}s, filter 0.2s ease`,
                   }}
+                />
+                {/* Stage label */}
+                <text
+                  x={centerX}
+                  y={y + LAYER_HEIGHT / 2 - 6}
+                  textAnchor="middle"
+                  fill="white"
+                  fontSize={13}
+                  fontWeight={600}
+                  style={{
+                    opacity: mounted ? 1 : 0,
+                    transition: `opacity 0.4s ease ${i * 0.09 + 0.15}s`,
+                  }}
+                  className="pointer-events-none select-none"
                 >
-                  <div className="flex items-center justify-between text-white min-h-[28px]">
-                    <span className="font-semibold text-sm whitespace-nowrap">
-                      {stage.label}
-                    </span>
-                    <div className="flex items-center gap-3 whitespace-nowrap">
-                      <span className="text-sm font-bold tabular-nums">
-                        {stage.count}
-                      </span>
-                      {stage.conversionRate !== null && (
-                        <span className="text-xs bg-white/20 px-1.5 py-0.5 rounded">
-                          {stage.conversionRate}%
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Conversion connector */}
-              {i < stages.length - 1 && (
-                <div className="flex justify-center py-0.5">
-                  <ChevronDown
-                    size={14}
-                    className="text-gray-300"
-                  />
-                </div>
-              )}
-            </div>
-          );
-        })}
+                  {stage.label}
+                </text>
+                <text
+                  x={centerX}
+                  y={y + LAYER_HEIGHT / 2 + 12}
+                  textAnchor="middle"
+                  fill="white"
+                  fontSize={11}
+                  style={{
+                    opacity: mounted ? 0.9 : 0,
+                    transition: `opacity 0.4s ease ${i * 0.09 + 0.2}s`,
+                  }}
+                  className="pointer-events-none select-none"
+                >
+                  {stage.count} candidates
+                  {stage.conversionRate !== null
+                    ? ` · ${stage.conversionRate}%`
+                    : ''}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
       </div>
 
       {/* Hover detail panel */}
