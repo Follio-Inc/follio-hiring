@@ -85,6 +85,8 @@ export function FunnelChart({
             const bottomHalf = getHalfWidth(nextCount);
             const colors = FUNNEL_STAGE_COLORS[stage.stage as FunnelStage];
             const isHovered = hoveredIndex === i;
+            const avgHalf = (topHalf + bottomHalf) / 2;
+            const isNarrow = avgHalf < 90;
 
             const path = [
               `M ${centerX - topHalf} ${y}`,
@@ -93,6 +95,8 @@ export function FunnelChart({
               `L ${centerX - bottomHalf} ${y + LAYER_HEIGHT}`,
               'Z',
             ].join(' ');
+
+            const detailText = `${stage.count} candidates${stage.conversionRate !== null ? ` · ${stage.conversionRate}%` : ''}`;
 
             return (
               <g
@@ -112,39 +116,73 @@ export function FunnelChart({
                     transition: `opacity 0.5s ease ${i * 0.09}s, filter 0.2s ease`,
                   }}
                 />
-                {/* Stage label */}
-                <text
-                  x={centerX}
-                  y={y + LAYER_HEIGHT / 2 - 6}
-                  textAnchor="middle"
-                  fill="white"
-                  fontSize={13}
-                  fontWeight={600}
-                  style={{
-                    opacity: mounted ? 1 : 0,
-                    transition: `opacity 0.4s ease ${i * 0.09 + 0.15}s`,
-                  }}
-                  className="pointer-events-none select-none"
-                >
-                  {stage.label}
-                </text>
-                <text
-                  x={centerX}
-                  y={y + LAYER_HEIGHT / 2 + 12}
-                  textAnchor="middle"
-                  fill="white"
-                  fontSize={11}
-                  style={{
-                    opacity: mounted ? 0.9 : 0,
-                    transition: `opacity 0.4s ease ${i * 0.09 + 0.2}s`,
-                  }}
-                  className="pointer-events-none select-none"
-                >
-                  {stage.count} candidates
-                  {stage.conversionRate !== null
-                    ? ` · ${stage.conversionRate}%`
-                    : ''}
-                </text>
+                {isNarrow ? (
+                  <>
+                    {/* Narrow layer — text floats to the right of the shape */}
+                    <text
+                      x={centerX + topHalf + 14}
+                      y={y + LAYER_HEIGHT / 2 - 4}
+                      textAnchor="start"
+                      fill={colors.fill}
+                      fontSize={13}
+                      fontWeight={600}
+                      style={{
+                        opacity: mounted ? 1 : 0,
+                        transition: `opacity 0.4s ease ${i * 0.09 + 0.15}s`,
+                      }}
+                      className="pointer-events-none select-none"
+                    >
+                      {stage.label}
+                    </text>
+                    <text
+                      x={centerX + topHalf + 14}
+                      y={y + LAYER_HEIGHT / 2 + 12}
+                      textAnchor="start"
+                      fill={colors.fill}
+                      fontSize={11}
+                      style={{
+                        opacity: mounted ? 0.7 : 0,
+                        transition: `opacity 0.4s ease ${i * 0.09 + 0.2}s`,
+                      }}
+                      className="pointer-events-none select-none"
+                    >
+                      {detailText}
+                    </text>
+                  </>
+                ) : (
+                  <>
+                    {/* Wide layer — text inside the shape */}
+                    <text
+                      x={centerX}
+                      y={y + LAYER_HEIGHT / 2 - 6}
+                      textAnchor="middle"
+                      fill="white"
+                      fontSize={13}
+                      fontWeight={600}
+                      style={{
+                        opacity: mounted ? 1 : 0,
+                        transition: `opacity 0.4s ease ${i * 0.09 + 0.15}s`,
+                      }}
+                      className="pointer-events-none select-none"
+                    >
+                      {stage.label}
+                    </text>
+                    <text
+                      x={centerX}
+                      y={y + LAYER_HEIGHT / 2 + 12}
+                      textAnchor="middle"
+                      fill="white"
+                      fontSize={11}
+                      style={{
+                        opacity: mounted ? 0.9 : 0,
+                        transition: `opacity 0.4s ease ${i * 0.09 + 0.2}s`,
+                      }}
+                      className="pointer-events-none select-none"
+                    >
+                      {detailText}
+                    </text>
+                  </>
+                )}
               </g>
             );
           })}
