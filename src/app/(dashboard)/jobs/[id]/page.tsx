@@ -8,6 +8,7 @@ import {
   TrendingUp,
   Sparkles,
   Settings,
+  BarChart3,
 } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { ApplicantTable } from '@/components/applicants/applicant-table';
@@ -47,10 +48,20 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
         title={job.title}
         subtitle={`${job.department} · ${job.experienceLevel.charAt(0).toUpperCase() + job.experienceLevel.slice(1)}`}
         actions={
-          <Button size="sm" variant="secondary">
-            <Settings size={14} className="mr-1.5" />
-            Edit Job
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => router.push(`/jobs/${id}/dashboard`)}
+            >
+              <BarChart3 size={14} className="mr-1.5" />
+              Analytics
+            </Button>
+            <Button size="sm" variant="secondary">
+              <Settings size={14} className="mr-1.5" />
+              Edit Job
+            </Button>
+          </div>
         }
       />
 
