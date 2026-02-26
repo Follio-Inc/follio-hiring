@@ -1,5 +1,5 @@
 // ============================================================
-// Core Data Models for Folio Hiring Platform
+// Core Data Models for Together Hiring Platform
 // ============================================================
 
 export type UserRole = 'recruiter' | 'manager' | 'admin';

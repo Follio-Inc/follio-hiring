@@ -20,11 +20,11 @@
   --ring: #7c3aed;
   --radius: 0.75rem;
 
-  --follio-purple: #7c3aed;
-  --follio-purple-light: #a78bfa;
-  --follio-purple-dark: #6d28d9;
-  --follio-violet: #8b5cf6;
-  --follio-indigo: #6366f1;
+  --together-purple: #7c3aed;
+  --together-purple-light: #a78bfa;
+  --together-purple-dark: #6d28d9;
+  --together-violet: #8b5cf6;
+  --together-indigo: #6366f1;
 }
 
 @theme inline {
@@ -114,7 +114,7 @@ body {
   animation: fade-in 0.3s ease-out forwards;
 }
 
-/* Focus ring — matches Folio purple */
+/* Focus ring — matches Together purple */
 *:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;

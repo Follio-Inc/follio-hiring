@@ -39,20 +39,19 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 h-screen bg-white border-r border-border flex flex-col fixed left-0 top-0 z-30">
-      {/* Logo — matches Folio branding */}
+      {/* Logo */}
       <div className="h-16 flex items-center px-5 border-b border-border">
         <div className="flex items-center gap-2">
           <Image
             src="/logo.png"
-            alt="Follio Logo"
+            alt="Together Logo"
             width={32}
             height={32}
             className="object-contain"
           />
           <span className="text-xl font-semibold bg-gradient-to-r from-violet-600 to-violet-400 bg-clip-text text-transparent">
-            Follio
+            Together
           </span>
-          <span className="text-xs font-medium text-muted-foreground mt-0.5">Hire</span>
         </div>
       </div>
 

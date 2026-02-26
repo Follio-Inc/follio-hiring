@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/auth-context';
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
-  const [email, setEmail] = useState('sarah@folio.dev');
+  const [email, setEmail] = useState('sarah@together.dev');
   const [password, setPassword] = useState('password');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,19 +35,18 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Left panel — branding (matches Folio purple gradient) */}
+      {/* Left panel — branding */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-violet-600 via-purple-600 to-violet-800 p-12 flex-col justify-between">
         <div>
           <div className="flex items-center gap-2.5 mb-16">
             <Image
               src="/logo.png"
-              alt="Follio Logo"
+              alt="Together Logo"
               width={40}
               height={40}
               className="object-contain"
             />
-            <span className="text-2xl font-semibold text-white">Follio</span>
-            <span className="text-sm font-medium text-violet-200 mt-1">Hire</span>
+            <span className="text-2xl font-semibold text-white">Together</span>
           </div>
 
           <h1 className="text-4xl font-bold text-white leading-tight mb-4">
@@ -82,13 +81,12 @@ export default function LoginPage() {
           <div className="lg:hidden flex items-center gap-2 mb-8">
             <Image
               src="/logo.png"
-              alt="Follio Logo"
+              alt="Together Logo"
               width={32}
               height={32}
               className="object-contain"
             />
-            <span className="text-xl font-semibold bg-gradient-to-r from-violet-600 to-violet-400 bg-clip-text text-transparent">Follio</span>
-            <span className="text-xs font-medium text-muted-foreground mt-0.5">Hire</span>
+            <span className="text-xl font-semibold bg-gradient-to-r from-violet-600 to-violet-400 bg-clip-text text-transparent">Together</span>
           </div>
 
           <h2 className="text-2xl font-bold text-foreground mb-1">Welcome back</h2>

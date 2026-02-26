@@ -1,7 +1,7 @@
 import { Job, CandidateProfile, AIAssessment } from './types';
 
 /**
- * AI Scoring Engine for Folio Hiring
+ * AI Scoring Engine for Together Hiring
  *
  * Computes a weighted fit score and generates intelligent assessments
  * by comparing candidate profiles against job requirements.

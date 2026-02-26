@@ -10,15 +10,15 @@ import { computeFitScore, generateAIAssessment } from './ai-scoring';
 
 export const mockCompany: Company = {
   id: 'comp_1',
-  name: 'Folio',
+  name: 'Together',
   logo: undefined,
-  domain: 'folio.dev',
+  domain: 'together.dev',
 };
 
 export const mockUser: User = {
   id: 'user_1',
   name: 'Sarah Chen',
-  email: 'sarah@folio.dev',
+  email: 'sarah@together.dev',
   role: 'recruiter',
   companyId: 'comp_1',
   avatarUrl: undefined,
@@ -103,7 +103,7 @@ export const mockJobs: Job[] = [
     roleType: 'developer',
     requiredSkills: ['Node.js', 'PostgreSQL', 'REST APIs', 'Docker', 'TypeScript', 'Redis'],
     experienceLevel: 'mid',
-    description: 'Build and scale the backend infrastructure powering Folio. Work on APIs, data pipelines, and AI-integration services.',
+    description: 'Build and scale the backend infrastructure powering Together. Work on APIs, data pipelines, and AI-integration services.',
     mustHave: ['Node.js or Python backend experience', 'SQL database expertise', 'API design skills', 'Cloud deployment experience'],
     niceToHave: ['AI/ML integration experience', 'Event-driven architecture', 'Kubernetes'],
     createdAt: '2026-02-12T10:00:00Z',

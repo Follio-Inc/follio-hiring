@@ -1,4 +1,4 @@
-# Follio Hire — AI-Powered Recruiter Platform
+# Together — AI-Powered Recruiter Platform
 
 An intelligent hiring platform where recruiters can post jobs, review applicants with AI-generated fit scores, compare candidates side-by-side, and make faster, smarter hiring decisions.
 
