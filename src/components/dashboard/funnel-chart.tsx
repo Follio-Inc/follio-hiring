@@ -43,24 +43,24 @@ export function FunnelChart({
   }
 
   return (
-    <div className="bg-card border border-border rounded-2xl p-6">
+    <div className="bg-white border border-stone-200/80 rounded-2xl p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-base font-semibold text-foreground">
+          <h3 className="text-base font-bold text-foreground tracking-tight">
             Hiring Funnel
           </h3>
-          <p className="text-sm text-muted-foreground mt-0.5">
+          <p className="text-sm text-stone-400 mt-0.5">
             Candidate progression through hiring stages
           </p>
         </div>
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1.5">
             <div className="w-2.5 h-2.5 rounded-full bg-violet-500" />
-            <span className="text-muted-foreground">Pipeline</span>
+            <span className="text-stone-400">Pipeline</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
-            <span className="text-muted-foreground">
+            <span className="text-stone-400">
               Rejected ({rejected})
             </span>
           </div>
@@ -191,16 +191,16 @@ export function FunnelChart({
 
       {/* Hover detail panel */}
       {hoveredIndex !== null && stages[hoveredIndex] && (
-        <div className="mt-5 p-4 bg-muted/50 rounded-xl border border-border text-sm animate-fade-in">
+        <div className="mt-5 p-4 bg-stone-50/80 rounded-xl border border-stone-200/80 text-sm animate-fade-in">
           <div className="flex items-center justify-between mb-2">
-            <span className="font-semibold text-foreground">
+            <span className="font-bold text-foreground">
               {stages[hoveredIndex].label}
             </span>
             <span className="text-foreground font-bold tabular-nums">
               {stages[hoveredIndex].count} candidates
             </span>
           </div>
-          <div className="space-y-1 text-muted-foreground">
+          <div className="space-y-1 text-stone-500">
             {stages[hoveredIndex].conversionRate !== null && (
               <p>
                 <span className="font-medium text-foreground">

@@ -47,7 +47,11 @@ function CompareContent() {
 
 export default function ComparePage() {
   return (
-    <Suspense fallback={<div className="p-6 text-gray-400">Loading comparison...</div>}>
+    <Suspense fallback={
+      <div className="p-6 flex items-center justify-center min-h-[40vh]">
+        <div className="text-stone-400 text-sm animate-pulse">Loading comparison...</div>
+      </div>
+    }>
       <CompareContent />
     </Suspense>
   );

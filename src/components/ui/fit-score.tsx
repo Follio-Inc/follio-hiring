@@ -43,7 +43,7 @@ export function FitScoreBar({ score }: { score: number }) {
         <span className="text-xs text-muted-foreground">Fit Score</span>
         <span className={cn('text-sm font-bold', getFitScoreColor(score))}>{score}</span>
       </div>
-      <div className="w-full bg-gray-100 rounded-full h-1.5">
+      <div className="w-full bg-stone-100 rounded-full h-1.5">
         <div
           className={cn(
             'h-1.5 rounded-full transition-all',

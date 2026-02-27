@@ -22,15 +22,15 @@ export default function DashboardLayout({
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-pulse text-gray-400">Loading...</div>
+      <div className="min-h-screen bg-[#faf9f6] flex items-center justify-center">
+        <div className="animate-pulse text-stone-400">Loading...</div>
       </div>
     );
   }
 
   return (
     <AppProvider>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-[#faf9f6]">
         <Sidebar />
         <main className="ml-64">
           {children}

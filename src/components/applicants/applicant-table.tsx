@@ -75,8 +75,8 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
     <button
       onClick={() => toggleSort(sortKeyName)}
       className={cn(
-        'flex items-center gap-1 text-xs font-medium uppercase tracking-wider transition-colors',
-        sortKey === sortKeyName ? 'text-violet-600' : 'text-muted-foreground hover:text-foreground'
+        'flex items-center gap-1 text-xs font-semibold uppercase tracking-wider transition-colors',
+        sortKey === sortKeyName ? 'text-violet-700' : 'text-stone-400 hover:text-stone-600'
       )}
     >
       {label}
@@ -89,7 +89,7 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
       {/* Toolbar */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-stone-400">
             {sorted.length} applicant{sorted.length !== 1 ? 's' : ''}
           </span>
           {compareIds.length > 0 && (
@@ -118,13 +118,13 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
 
       {/* Filters */}
       {showFilters && (
-        <div className="flex items-center gap-4 mb-4 p-3 bg-muted/50 rounded-2xl border border-border">
+        <div className="flex items-center gap-4 mb-4 p-4 bg-stone-50/80 rounded-2xl border border-stone-200/80">
           <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-1">Stage</label>
+            <label className="block text-xs font-semibold text-stone-400 mb-1.5 uppercase tracking-wider">Stage</label>
             <select
               value={stageFilter}
               onChange={e => setStageFilter(e.target.value)}
-              className="px-2 py-1 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-violet-500"
+              className="px-3 py-1.5 text-sm border border-stone-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30 transition-all"
             >
               <option value="all">All stages</option>
               <option value="new">New</option>
@@ -136,7 +136,7 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
             </select>
           </div>
           <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-1">Min Fit Score</label>
+            <label className="block text-xs font-semibold text-stone-400 mb-1.5 uppercase tracking-wider">Min Fit Score</label>
             <input
               type="range"
               min="0"
@@ -146,41 +146,41 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
               onChange={e => setMinFitScore(Number(e.target.value))}
               className="w-32 accent-violet-600"
             />
-            <span className="ml-2 text-xs text-muted-foreground">{minFitScore}+</span>
+            <span className="ml-2 text-xs text-stone-400 tabular-nums">{minFitScore}+</span>
           </div>
         </div>
       )}
 
       {/* Table */}
-      <div className="bg-card border border-border rounded-2xl overflow-hidden">
+      <div className="bg-white border border-stone-200/80 rounded-2xl overflow-hidden">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-border">
-              <th className="px-4 py-3 text-left w-10">
+            <tr className="border-b border-stone-100">
+              <th className="px-4 py-3.5 text-left w-10">
                 <span className="sr-only">Compare</span>
               </th>
-              <th className="px-4 py-3 text-left">
+              <th className="px-4 py-3.5 text-left">
                 <SortHeader label="Candidate" sortKeyName="name" />
               </th>
-              <th className="px-4 py-3 text-left">
-                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Role</span>
+              <th className="px-4 py-3.5 text-left">
+                <span className="text-xs font-semibold text-stone-400 uppercase tracking-wider">Role</span>
               </th>
-              <th className="px-4 py-3 text-center">
+              <th className="px-4 py-3.5 text-center">
                 <SortHeader label="Fit" sortKeyName="fitScore" />
               </th>
-              <th className="px-4 py-3 text-left">
-                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Top Strengths</span>
+              <th className="px-4 py-3.5 text-left">
+                <span className="text-xs font-semibold text-stone-400 uppercase tracking-wider">Top Strengths</span>
               </th>
-              <th className="px-4 py-3 text-center">
+              <th className="px-4 py-3.5 text-center">
                 <SortHeader label="Exp" sortKeyName="experience" />
               </th>
-              <th className="px-4 py-3 text-center">
-                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Rating</span>
+              <th className="px-4 py-3.5 text-center">
+                <span className="text-xs font-semibold text-stone-400 uppercase tracking-wider">Rating</span>
               </th>
-              <th className="px-4 py-3 text-center">
-                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</span>
+              <th className="px-4 py-3.5 text-center">
+                <span className="text-xs font-semibold text-stone-400 uppercase tracking-wider">Status</span>
               </th>
-              <th className="px-4 py-3 text-right">
+              <th className="px-4 py-3.5 text-right">
                 <SortHeader label="Applied" sortKeyName="appliedAt" />
               </th>
             </tr>
@@ -191,67 +191,60 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
               return (
                 <tr
                   key={app.id}
-                  className="border-b border-gray-50 hover:bg-violet-50/30 transition-colors cursor-pointer group"
+                  className="border-b border-stone-50 hover:bg-violet-50/20 transition-all duration-150 cursor-pointer group"
                   onClick={() => router.push(`/candidates/${app.candidateId}?job=${jobId}`)}
                 >
-                  {/* Compare checkbox */}
                   <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
                     <button
                       onClick={() => toggleCompare(app.candidateId)}
                       className={cn(
                         'transition-colors',
-                        isSelected ? 'text-violet-600' : 'text-gray-300 hover:text-gray-500'
+                        isSelected ? 'text-violet-600' : 'text-stone-300 hover:text-stone-500'
                       )}
                     >
                       {isSelected ? <CheckSquare size={18} /> : <Square size={18} />}
                     </button>
                   </td>
 
-                  {/* Candidate */}
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <Avatar name={app.candidate.name} size="sm" />
                       <div>
-                        <p className="text-sm font-medium text-foreground group-hover:text-violet-600 transition-colors">
+                        <p className="text-sm font-medium text-foreground group-hover:text-violet-700 transition-colors">
                           {app.candidate.name}
                         </p>
-                        <p className="text-xs text-muted-foreground">{app.candidate.title}</p>
+                        <p className="text-xs text-stone-400">{app.candidate.title}</p>
                       </div>
                     </div>
                   </td>
 
-                  {/* Role Type */}
                   <td className="px-4 py-3">
                     <span className="text-sm">
                       {getRoleIcon(app.candidate.roleType)}{' '}
-                      <span className="text-muted-foreground capitalize">{app.candidate.roleType}</span>
+                      <span className="text-stone-400 capitalize">{app.candidate.roleType}</span>
                     </span>
                   </td>
 
-                  {/* Fit Score */}
                   <td className="px-4 py-3">
                     <div className="flex justify-center">
                       <FitScore score={app.fitScore} size="sm" />
                     </div>
                   </td>
 
-                  {/* Strengths */}
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1 max-w-xs">
                       {app.aiSummary.strengths.slice(0, 2).map((s, i) => (
-                        <span key={i} className="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded truncate max-w-[140px]">
+                        <span key={i} className="text-xs text-stone-500 bg-stone-100/80 px-1.5 py-0.5 rounded-md truncate max-w-[140px]">
                           {s.length > 30 ? s.substring(0, 30) + '...' : s}
                         </span>
                       ))}
                     </div>
                   </td>
 
-                  {/* Experience */}
                   <td className="px-4 py-3 text-center">
-                    <span className="text-sm text-foreground">{app.candidate.yearsOfExperience}yr</span>
+                    <span className="text-sm text-foreground tabular-nums">{app.candidate.yearsOfExperience}yr</span>
                   </td>
 
-                  {/* Rating */}
                   <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
                     <div className="flex justify-center">
                       <StarRating
@@ -262,14 +255,12 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
                     </div>
                   </td>
 
-                  {/* Stage */}
                   <td className="px-4 py-3 text-center">
                     <StageBadge stage={app.stage} />
                   </td>
 
-                  {/* Applied Date */}
                   <td className="px-4 py-3 text-right">
-                    <span className="text-xs text-muted-foreground">{formatDate(app.appliedAt)}</span>
+                    <span className="text-xs text-stone-400">{formatDate(app.appliedAt)}</span>
                   </td>
                 </tr>
               );
@@ -278,7 +269,7 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
         </table>
 
         {sorted.length === 0 && (
-          <div className="py-12 text-center text-muted-foreground">
+          <div className="py-12 text-center text-stone-400">
             <p className="text-sm">No applicants match the current filters.</p>
           </div>
         )}

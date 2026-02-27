@@ -30,7 +30,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   if (!job) {
     return (
       <div className="p-6">
-        <p className="text-muted-foreground">Job not found.</p>
+        <p className="text-stone-400">Job not found.</p>
         <Button variant="ghost" onClick={() => router.push('/dashboard')} className="mt-2">
           <ArrowLeft size={14} className="mr-1.5" /> Back to Dashboard
         </Button>
@@ -69,12 +69,12 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
         {/* Job Quick Info */}
         <div className="mb-6 flex items-center gap-6">
           <div className="flex items-center gap-2">
-            <Users size={16} className="text-muted-foreground" />
+            <Users size={16} className="text-stone-400" />
             <span className="text-sm text-foreground"><strong>{applications.length}</strong> applicants</span>
           </div>
           <div className="flex items-center gap-2">
-            <TrendingUp size={16} className="text-muted-foreground" />
-            <span className={cn('text-sm font-medium', getFitScoreColor(job.avgFitScore))}>
+            <TrendingUp size={16} className="text-stone-400" />
+            <span className={cn('text-sm font-semibold', getFitScoreColor(job.avgFitScore))}>
               {job.avgFitScore} avg fit
             </span>
           </div>
@@ -87,12 +87,12 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
         {/* AI Snapshot */}
         {job.aiSnapshot && (
-          <div className="mb-6 p-4 bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100 rounded-2xl">
+          <div className="mb-6 p-5 bg-gradient-to-r from-violet-50/80 via-purple-50/60 to-indigo-50/40 border border-violet-100/60 rounded-2xl">
             <div className="flex items-center gap-2 mb-2">
               <Sparkles size={14} className="text-violet-600" />
-              <h3 className="text-xs font-semibold text-violet-900 uppercase tracking-wider">Ideal Candidate Snapshot</h3>
+              <h3 className="text-xs font-bold text-violet-900 uppercase tracking-wider">Ideal Candidate Snapshot</h3>
             </div>
-            <p className="text-sm text-violet-800">{job.aiSnapshot.idealCandidate}</p>
+            <p className="text-sm text-violet-800/80 leading-relaxed">{job.aiSnapshot.idealCandidate}</p>
           </div>
         )}
 

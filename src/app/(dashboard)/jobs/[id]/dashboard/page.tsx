@@ -187,16 +187,16 @@ export default function JobDashboardPage({
       <div className="p-6 space-y-6">
         {/* Time filter + CSV export */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1 bg-muted rounded-lg p-0.5">
+          <div className="flex items-center gap-1 bg-stone-100/80 rounded-xl p-0.5">
             {PERIOD_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
                 onClick={() => setPeriod(opt.value)}
                 className={cn(
-                  'px-3 py-1.5 text-xs font-medium rounded-md transition-colors',
+                  'px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200',
                   period === opt.value
                     ? 'bg-white text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground',
+                    : 'text-stone-400 hover:text-stone-600',
                 )}
               >
                 <Calendar size={12} className="inline mr-1 -mt-0.5" />
@@ -234,21 +234,21 @@ export default function JobDashboardPage({
         />
 
         {/* Stage Distribution Table */}
-        <div className="bg-card border border-border rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-border">
+        <div className="bg-white border border-stone-200/80 rounded-2xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-stone-100">
             <div className="flex items-center gap-2">
-              <BarChart3 size={16} className="text-muted-foreground" />
-              <h3 className="text-base font-semibold text-foreground">
+              <BarChart3 size={16} className="text-stone-400" />
+              <h3 className="text-base font-bold text-foreground tracking-tight">
                 Stage Breakdown
               </h3>
             </div>
-            <p className="text-sm text-muted-foreground mt-0.5">
+            <p className="text-sm text-stone-400 mt-0.5">
               Detailed view of candidates at each stage
             </p>
           </div>
           <table className="w-full">
             <thead>
-              <tr className="border-b border-border bg-muted/30">
+              <tr className="border-b border-stone-100 bg-stone-50/50">
                 <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">
                   Stage
                 </th>
@@ -266,7 +266,7 @@ export default function JobDashboardPage({
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
+            <tbody className="divide-y divide-stone-100">
               {analytics.stages.map((stage) => {
                 const barWidth =
                   analytics.totalApplicants > 0
@@ -276,7 +276,7 @@ export default function JobDashboardPage({
                 return (
                   <tr
                     key={stage.stage}
-                    className="hover:bg-muted/20 transition-colors"
+                    className="hover:bg-stone-50/80 transition-colors"
                   >
                     <td className="px-6 py-3">
                       <span className="text-sm font-medium text-foreground">
@@ -314,7 +314,7 @@ export default function JobDashboardPage({
                       </span>
                     </td>
                     <td className="px-6 py-3">
-                      <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+                      <div className="w-full bg-stone-100 rounded-full h-2 overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all duration-700"
                           style={{
@@ -347,7 +347,7 @@ export default function JobDashboardPage({
                   <span className="text-xs text-muted-foreground">—</span>
                 </td>
                 <td className="px-6 py-3">
-                  <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-stone-100 rounded-full h-2 overflow-hidden">
                     <div
                       className="h-full rounded-full bg-red-400 transition-all duration-700"
                       style={{

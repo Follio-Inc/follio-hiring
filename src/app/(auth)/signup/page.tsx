@@ -29,12 +29,12 @@ export default function SignupPage() {
     }
   };
 
-  const inputClasses = 'w-full px-4 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent bg-white';
+  const inputClasses = 'w-full px-4 py-3 text-sm bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400 transition-all placeholder:text-stone-400';
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-8">
-      <div className="w-full max-w-md">
-        <div className="flex items-center gap-2 mb-8 justify-center">
+    <div className="min-h-screen bg-[#faf9f6] flex items-center justify-center p-8">
+      <div className="w-full max-w-[400px]">
+        <div className="flex items-center gap-2 mb-10 justify-center">
           <Image
             src="/logo.png"
             alt="Together Logo"
@@ -42,15 +42,15 @@ export default function SignupPage() {
             height={32}
             className="object-contain"
           />
-          <span className="text-xl font-semibold bg-gradient-to-r from-violet-600 to-violet-400 bg-clip-text text-transparent">Together</span>
+          <span className="text-xl font-semibold text-foreground tracking-tight">Together</span>
         </div>
 
-        <h2 className="text-2xl font-bold text-foreground mb-1 text-center">Create your account</h2>
-        <p className="text-muted-foreground mb-8 text-center">Start hiring smarter with AI</p>
+        <h2 className="text-[1.75rem] font-bold text-foreground mb-1 text-center tracking-tight">Create your account</h2>
+        <p className="text-muted-foreground mb-9 text-center">Start hiring smarter with AI</p>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">Full Name</label>
+            <label className="block text-sm font-medium text-foreground mb-2">Full Name</label>
             <input
               type="text"
               value={name}
@@ -62,7 +62,7 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">Email</label>
+            <label className="block text-sm font-medium text-foreground mb-2">Email</label>
             <input
               type="email"
               value={email}
@@ -74,7 +74,7 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">Password</label>
+            <label className="block text-sm font-medium text-foreground mb-2">Password</label>
             <input
               type="password"
               value={password}
@@ -86,7 +86,7 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">Role</label>
+            <label className="block text-sm font-medium text-foreground mb-2">Role</label>
             <select
               value={role}
               onChange={e => setRole(e.target.value as UserRole)}
@@ -98,17 +98,17 @@ export default function SignupPage() {
             </select>
           </div>
 
-          <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+          <Button type="submit" className="w-full !py-3 !rounded-xl !text-[15px]" size="lg" disabled={isLoading}>
             {isLoading ? 'Creating account...' : 'Create account'}
             {!isLoading && <ArrowRight size={16} className="ml-2" />}
           </Button>
         </form>
 
-        <p className="text-center text-sm text-muted-foreground mt-6">
+        <p className="text-center text-sm text-muted-foreground mt-8">
           Already have an account?{' '}
           <button
             onClick={() => router.push('/login')}
-            className="text-violet-600 font-medium hover:text-violet-700"
+            className="text-violet-700 font-semibold hover:text-violet-800 transition-colors"
           >
             Sign in
           </button>

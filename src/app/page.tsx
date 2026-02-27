@@ -17,8 +17,8 @@ export default function HomePage() {
   }, [isAuthenticated, router]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="animate-pulse text-gray-400 text-sm">Redirecting...</div>
+    <div className="min-h-screen bg-[#faf9f6] flex items-center justify-center">
+      <div className="animate-pulse text-stone-400 text-sm">Redirecting...</div>
     </div>
   );
 }

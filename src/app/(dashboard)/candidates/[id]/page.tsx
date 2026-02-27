@@ -2,7 +2,7 @@
 
 import { use, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, UserX } from 'lucide-react';
 import { CandidateDetail } from '@/components/applicants/candidate-detail';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/contexts/app-context';
@@ -21,9 +21,13 @@ export default function CandidateDetailPage({ params }: { params: Promise<{ id: 
 
   if (!application) {
     return (
-      <div className="p-6">
-        <p className="text-gray-400 mb-4">Candidate not found for this job.</p>
-        <Button variant="ghost" onClick={() => router.back()}>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-6">
+        <div className="w-14 h-14 bg-stone-100 rounded-2xl flex items-center justify-center mb-4">
+          <UserX size={24} className="text-stone-400" />
+        </div>
+        <h2 className="text-lg font-bold text-foreground mb-1 tracking-tight">Candidate not found</h2>
+        <p className="text-sm text-stone-400 mb-4">This candidate may not exist for this job.</p>
+        <Button variant="secondary" onClick={() => router.back()}>
           <ArrowLeft size={14} className="mr-1.5" /> Go Back
         </Button>
       </div>
@@ -32,7 +36,7 @@ export default function CandidateDetailPage({ params }: { params: Promise<{ id: 
 
   return (
     <div>
-      <div className="p-4 border-b border-gray-200 bg-white">
+      <div className="p-4 border-b border-stone-200/80 bg-white/80 backdrop-blur-xl">
         <Button variant="ghost" size="sm" onClick={() => router.back()}>
           <ArrowLeft size={14} className="mr-1.5" /> Back to Applicants
         </Button>

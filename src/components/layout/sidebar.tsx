@@ -38,18 +38,18 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 h-screen bg-white border-r border-border flex flex-col fixed left-0 top-0 z-30">
+    <aside className="w-64 h-screen bg-white/80 backdrop-blur-xl border-r border-stone-200/80 flex flex-col fixed left-0 top-0 z-30">
       {/* Logo */}
-      <div className="h-16 flex items-center px-5 border-b border-border">
-        <div className="flex items-center gap-2">
+      <div className="h-16 flex items-center px-5 border-b border-stone-200/80">
+        <div className="flex items-center gap-2.5">
           <Image
             src="/logo.png"
             alt="Together Logo"
-            width={32}
-            height={32}
+            width={30}
+            height={30}
             className="object-contain"
           />
-          <span className="text-xl font-semibold bg-gradient-to-r from-violet-600 to-violet-400 bg-clip-text text-transparent">
+          <span className="text-lg font-bold tracking-tight text-foreground">
             Together
           </span>
         </div>
@@ -63,10 +63,10 @@ export function Sidebar() {
               key={item.href}
               onClick={() => router.push(item.href)}
               className={cn(
-                'w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
+                'w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
                 item.active
-                  ? 'bg-violet-50 text-violet-700'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  ? 'bg-violet-50 text-violet-700 shadow-sm shadow-violet-100/50'
+                  : 'text-stone-500 hover:bg-stone-100/80 hover:text-stone-800'
               )}
             >
               <item.icon size={18} />
@@ -76,14 +76,14 @@ export function Sidebar() {
         </div>
 
         {/* Jobs List */}
-        <div className="mt-6">
-          <div className="flex items-center justify-between px-3 mb-2">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        <div className="mt-7">
+          <div className="flex items-center justify-between px-3 mb-2.5">
+            <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-widest">
               Active Jobs
             </span>
             <button
               onClick={() => router.push('/jobs/new')}
-              className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+              className="p-1 rounded-lg hover:bg-stone-100 text-stone-400 hover:text-stone-600 transition-all duration-200"
             >
               <Plus size={14} />
             </button>
@@ -95,10 +95,10 @@ export function Sidebar() {
                 key={job.id}
                 onClick={() => router.push(`/jobs/${job.id}`)}
                 className={cn(
-                  'w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors group',
+                  'w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group',
                   pathname === `/jobs/${job.id}`
-                    ? 'bg-violet-50 text-violet-700'
-                    : 'text-gray-600 hover:bg-gray-50'
+                    ? 'bg-violet-50 text-violet-700 shadow-sm shadow-violet-100/50'
+                    : 'text-stone-500 hover:bg-stone-100/80 hover:text-stone-700'
                 )}
               >
                 <div className="flex items-center gap-2 min-w-0">
@@ -108,10 +108,10 @@ export function Sidebar() {
                   <span className="truncate">{job.title}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-xs text-muted-foreground">{job.applicantCount}</span>
+                  <span className="text-xs text-stone-400 tabular-nums">{job.applicantCount}</span>
                   <ChevronRight
                     size={14}
-                    className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="text-stone-300 opacity-0 group-hover:opacity-100 transition-opacity"
                   />
                 </div>
               </button>
@@ -121,13 +121,13 @@ export function Sidebar() {
       </nav>
 
       {/* User */}
-      <div className="border-t border-border p-3">
+      <div className="border-t border-stone-200/80 p-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5 min-w-0">
             <Avatar name={user.name} size="sm" />
             <div className="min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
-              <p className="text-xs text-muted-foreground truncate capitalize">{user.role}</p>
+              <p className="text-sm font-medium text-stone-800 truncate">{user.name}</p>
+              <p className="text-xs text-stone-400 truncate capitalize">{user.role}</p>
             </div>
           </div>
           <button
@@ -135,7 +135,7 @@ export function Sidebar() {
               logout();
               router.push('/login');
             }}
-            className="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+            className="p-1.5 rounded-lg hover:bg-stone-100 text-stone-400 hover:text-stone-600 transition-all duration-200"
           >
             <LogOut size={16} />
           </button>

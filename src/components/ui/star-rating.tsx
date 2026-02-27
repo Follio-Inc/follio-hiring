@@ -20,9 +20,9 @@ export function StarRating({ rating, onChange, size = 'sm' }: StarRatingProps) {
           type="button"
           onClick={() => onChange?.(star === rating ? 0 : star)}
           className={cn(
-            'transition-colors',
-            onChange ? 'cursor-pointer hover:text-amber-400' : 'cursor-default',
-            star <= rating ? 'text-amber-400' : 'text-gray-300'
+            'transition-all duration-200',
+            onChange ? 'cursor-pointer hover:text-amber-400 hover:scale-110' : 'cursor-default',
+            star <= rating ? 'text-amber-400' : 'text-stone-300'
           )}
           disabled={!onChange}
         >
