@@ -17,14 +17,14 @@ const sizes = {
 };
 
 const colors = [
-  'bg-violet-500',
-  'bg-purple-500',
-  'bg-fuchsia-500',
-  'bg-indigo-500',
-  'bg-emerald-500',
   'bg-amber-500',
+  'bg-orange-500',
   'bg-rose-500',
+  'bg-emerald-500',
   'bg-teal-500',
+  'bg-sky-500',
+  'bg-indigo-500',
+  'bg-fuchsia-500',
 ];
 
 function getColorFromName(name: string): string {
@@ -41,7 +41,7 @@ export function Avatar({ name, imageUrl, size = 'md', className }: AvatarProps) 
       <img
         src={imageUrl}
         alt={name}
-        className={cn('rounded-full object-cover ring-2 ring-white', sizes[size], className)}
+        className={cn('rounded-full object-cover ring-2 ring-white shadow-sm', sizes[size], className)}
       />
     );
   }
@@ -49,7 +49,7 @@ export function Avatar({ name, imageUrl, size = 'md', className }: AvatarProps) 
   return (
     <div
       className={cn(
-        'rounded-full flex items-center justify-center text-white font-bold ring-2 ring-white shadow-sm',
+        'rounded-full flex items-center justify-center text-white font-bold ring-2 ring-white/80 shadow-sm',
         sizes[size],
         getColorFromName(name),
         className

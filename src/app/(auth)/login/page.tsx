@@ -35,55 +35,55 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left panel — atmospheric dark branding */}
+      {/* Left panel — warm dark branding */}
       <div className="hidden lg:flex lg:w-[52%] relative overflow-hidden flex-col justify-between p-14"
         style={{
-          background: 'linear-gradient(145deg, #0c0618 0%, #1a0f36 40%, #120b2e 70%, #0a0514 100%)',
+          background: 'linear-gradient(145deg, #0f0906 0%, #1a1008 40%, #120c05 70%, #0a0604 100%)',
         }}
       >
         {/* Dot grid texture */}
         <div
-          className="absolute inset-0 opacity-[0.07]"
+          className="absolute inset-0 opacity-[0.05]"
           style={{
-            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)',
-            backgroundSize: '28px 28px',
+            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px)',
+            backgroundSize: '32px 32px',
           }}
         />
 
-        {/* Ambient glow */}
+        {/* Ambient gold glow */}
         <div
-          className="absolute top-[15%] left-[40%] w-[500px] h-[500px] rounded-full"
+          className="absolute top-[10%] left-[35%] w-[500px] h-[500px] rounded-full"
           style={{
-            background: 'radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 65%)',
+            background: 'radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, transparent 65%)',
           }}
         />
         <div
-          className="absolute bottom-[10%] right-[10%] w-[300px] h-[300px] rounded-full"
+          className="absolute bottom-[15%] right-[15%] w-[300px] h-[300px] rounded-full"
           style={{
-            background: 'radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 60%)',
+            background: 'radial-gradient(circle, rgba(217, 119, 6, 0.08) 0%, transparent 60%)',
           }}
         />
 
         {/* Content */}
         <div className="relative z-10">
-          <div className="flex items-center gap-2.5 mb-20">
+          <div className="flex items-center gap-2.5 mb-24">
             <Image
               src="/logo.png"
               alt="Together Logo"
-              width={36}
-              height={36}
+              width={34}
+              height={34}
               className="object-contain opacity-90"
             />
-            <span className="text-xl font-semibold text-white/90 tracking-tight">Together</span>
+            <span className="text-xl font-semibold text-white/80 tracking-tight">Together</span>
           </div>
 
           <h1 className="text-[3.5rem] font-bold text-white leading-[1.08] tracking-tight mb-6 max-w-lg">
             Hire smarter,{' '}
-            <span className="bg-gradient-to-r from-violet-300 via-purple-300 to-indigo-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-300 bg-clip-text text-transparent">
               together.
             </span>
           </h1>
-          <p className="text-lg text-white/50 leading-relaxed max-w-md font-light">
+          <p className="text-lg text-white/40 leading-relaxed max-w-md font-light">
             AI-powered candidate scoring, portfolio intelligence,
             and pipeline analytics — all in one place.
           </p>
@@ -91,23 +91,23 @@ export default function LoginPage() {
 
         <div className="relative z-10 space-y-5">
           {[
-            { icon: Sparkles, text: 'AI fit scoring in seconds', accent: 'from-violet-400 to-purple-400' },
-            { icon: Users, text: 'Side-by-side candidate comparison', accent: 'from-indigo-400 to-blue-400' },
-            { icon: Zap, text: 'Pipeline analytics & funnel insights', accent: 'from-purple-400 to-pink-400' },
+            { icon: Sparkles, text: 'AI fit scoring in seconds' },
+            { icon: Users, text: 'Side-by-side candidate comparison' },
+            { icon: Zap, text: 'Pipeline analytics & funnel insights' },
           ].map((item) => (
             <div key={item.text} className="flex items-center gap-4 group">
-              <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${item.accent} bg-opacity-10 flex items-center justify-center flex-shrink-0`}
-                style={{ background: 'rgba(139, 92, 246, 0.1)', border: '1px solid rgba(139, 92, 246, 0.15)' }}
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.15)' }}
               >
-                <item.icon size={16} className="text-violet-300" />
+                <item.icon size={16} className="text-amber-400/80" />
               </div>
-              <span className="text-white/60 text-[15px] font-light group-hover:text-white/80 transition-colors">{item.text}</span>
+              <span className="text-white/40 text-[15px] font-light group-hover:text-white/60 transition-colors">{item.text}</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Right panel — warm form */}
+      {/* Right panel — form */}
       <div className="flex-1 flex items-center justify-center p-8 bg-[#faf9f6]">
         <div className="w-full max-w-[400px]">
           {/* Mobile logo */}
@@ -123,7 +123,7 @@ export default function LoginPage() {
           </div>
 
           <h2 className="text-[1.75rem] font-bold text-foreground tracking-tight mb-1">Welcome back</h2>
-          <p className="text-muted-foreground mb-9">Sign in to your recruiter dashboard</p>
+          <p className="text-stone-400 mb-9">Sign in to your recruiter dashboard</p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
@@ -132,7 +132,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                className="w-full px-4 py-3 text-sm bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400 transition-all placeholder:text-stone-400"
+                className="w-full px-4 py-3 text-sm bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all placeholder:text-stone-400"
                 placeholder="you@company.com"
                 required
               />
@@ -145,7 +145,7 @@ export default function LoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 text-sm bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:border-violet-400 transition-all pr-11 placeholder:text-stone-400"
+                  className="w-full px-4 py-3 text-sm bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all pr-11 placeholder:text-stone-400"
                   placeholder="Enter password"
                   required
                 />
@@ -169,11 +169,11 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <p className="text-center text-sm text-muted-foreground mt-8">
+          <p className="text-center text-sm text-stone-400 mt-8">
             Don&apos;t have an account?{' '}
             <button
               onClick={() => router.push('/signup')}
-              className="text-violet-700 font-semibold hover:text-violet-800 transition-colors"
+              className="text-amber-700 font-semibold hover:text-amber-800 transition-colors"
             >
               Sign up
             </button>

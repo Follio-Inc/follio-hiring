@@ -21,7 +21,7 @@ export function MetricCard({
 }: MetricCardProps) {
   return (
     <div
-      className="bg-white border border-stone-200/80 rounded-2xl p-4 animate-fade-in-up hover:shadow-lg hover:shadow-stone-200/30 transition-all duration-300"
+      className="bg-white/50 backdrop-blur-xl border border-white/60 rounded-2xl p-4 animate-fade-in-up hover:bg-white/70 hover:shadow-lg hover:shadow-black/[0.03] transition-all duration-300"
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="flex items-center justify-between mb-3">
@@ -34,7 +34,7 @@ export function MetricCard({
           {icon}
         </div>
         {conversionRate !== null && conversionRate !== undefined && (
-          <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+          <span className="text-xs font-semibold text-emerald-700 bg-emerald-50/80 border border-emerald-200/50 px-2 py-0.5 rounded-full backdrop-blur-sm">
             {conversionRate}%
           </span>
         )}

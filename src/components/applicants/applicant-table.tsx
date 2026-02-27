@@ -76,7 +76,7 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
       onClick={() => toggleSort(sortKeyName)}
       className={cn(
         'flex items-center gap-1 text-xs font-semibold uppercase tracking-wider transition-colors',
-        sortKey === sortKeyName ? 'text-violet-700' : 'text-stone-400 hover:text-stone-600'
+        sortKey === sortKeyName ? 'text-amber-700' : 'text-stone-400 hover:text-stone-600'
       )}
     >
       {label}
@@ -104,27 +104,25 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
           )}
         </div>
 
-        <div className="flex items-center gap-2">
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <SlidersHorizontal size={14} className="mr-1.5" />
-            Filters
-          </Button>
-        </div>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => setShowFilters(!showFilters)}
+        >
+          <SlidersHorizontal size={14} className="mr-1.5" />
+          Filters
+        </Button>
       </div>
 
       {/* Filters */}
       {showFilters && (
-        <div className="flex items-center gap-4 mb-4 p-4 bg-stone-50/80 rounded-2xl border border-stone-200/80">
+        <div className="flex items-center gap-4 mb-4 p-4 bg-white/40 backdrop-blur-xl rounded-2xl border border-white/50">
           <div>
             <label className="block text-xs font-semibold text-stone-400 mb-1.5 uppercase tracking-wider">Stage</label>
             <select
               value={stageFilter}
               onChange={e => setStageFilter(e.target.value)}
-              className="px-3 py-1.5 text-sm border border-stone-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30 transition-all"
+              className="px-3 py-1.5 text-sm border border-white/50 rounded-xl bg-white/60 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 transition-all"
             >
               <option value="all">All stages</option>
               <option value="new">New</option>
@@ -144,7 +142,7 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
               step="10"
               value={minFitScore}
               onChange={e => setMinFitScore(Number(e.target.value))}
-              className="w-32 accent-violet-600"
+              className="w-32 accent-amber-600"
             />
             <span className="ml-2 text-xs text-stone-400 tabular-nums">{minFitScore}+</span>
           </div>
@@ -152,10 +150,10 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
       )}
 
       {/* Table */}
-      <div className="bg-white border border-stone-200/80 rounded-2xl overflow-hidden">
+      <div className="bg-white/50 backdrop-blur-xl border border-white/60 rounded-2xl overflow-hidden">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-stone-100">
+            <tr className="border-b border-white/40">
               <th className="px-4 py-3.5 text-left w-10">
                 <span className="sr-only">Compare</span>
               </th>
@@ -191,7 +189,7 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
               return (
                 <tr
                   key={app.id}
-                  className="border-b border-stone-50 hover:bg-violet-50/20 transition-all duration-150 cursor-pointer group"
+                  className="border-b border-white/30 hover:bg-white/30 transition-all duration-150 cursor-pointer group"
                   onClick={() => router.push(`/candidates/${app.candidateId}?job=${jobId}`)}
                 >
                   <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
@@ -199,7 +197,7 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
                       onClick={() => toggleCompare(app.candidateId)}
                       className={cn(
                         'transition-colors',
-                        isSelected ? 'text-violet-600' : 'text-stone-300 hover:text-stone-500'
+                        isSelected ? 'text-amber-600' : 'text-stone-300 hover:text-stone-500'
                       )}
                     >
                       {isSelected ? <CheckSquare size={18} /> : <Square size={18} />}
@@ -210,7 +208,7 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
                     <div className="flex items-center gap-3">
                       <Avatar name={app.candidate.name} size="sm" />
                       <div>
-                        <p className="text-sm font-medium text-foreground group-hover:text-violet-700 transition-colors">
+                        <p className="text-sm font-medium text-foreground group-hover:text-amber-700 transition-colors">
                           {app.candidate.name}
                         </p>
                         <p className="text-xs text-stone-400">{app.candidate.title}</p>
@@ -234,7 +232,7 @@ export function ApplicantTable({ applications, jobId }: ApplicantTableProps) {
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1 max-w-xs">
                       {app.aiSummary.strengths.slice(0, 2).map((s, i) => (
-                        <span key={i} className="text-xs text-stone-500 bg-stone-100/80 px-1.5 py-0.5 rounded-md truncate max-w-[140px]">
+                        <span key={i} className="text-xs text-stone-500 bg-white/50 backdrop-blur-sm px-1.5 py-0.5 rounded-md truncate max-w-[140px]">
                           {s.length > 30 ? s.substring(0, 30) + '...' : s}
                         </span>
                       ))}

@@ -43,7 +43,7 @@ export function FunnelChart({
   }
 
   return (
-    <div className="bg-white border border-stone-200/80 rounded-2xl p-6">
+    <div className="bg-white/50 backdrop-blur-xl border border-white/60 rounded-2xl p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-base font-bold text-foreground tracking-tight">
@@ -55,7 +55,7 @@ export function FunnelChart({
         </div>
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-violet-500" />
+            <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
             <span className="text-stone-400">Pipeline</span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -67,7 +67,6 @@ export function FunnelChart({
         </div>
       </div>
 
-      {/* SVG Funnel */}
       <div className="flex justify-center">
         <svg
           viewBox={`0 0 ${SVG_WIDTH} ${totalHeight}`}
@@ -118,7 +117,6 @@ export function FunnelChart({
                 />
                 {isNarrow ? (
                   <>
-                    {/* Narrow layer — text floats to the right of the shape */}
                     <text
                       x={centerX + topHalf + 14}
                       y={y + LAYER_HEIGHT / 2 - 4}
@@ -151,7 +149,6 @@ export function FunnelChart({
                   </>
                 ) : (
                   <>
-                    {/* Wide layer — text inside the shape */}
                     <text
                       x={centerX}
                       y={y + LAYER_HEIGHT / 2 - 6}
@@ -189,9 +186,8 @@ export function FunnelChart({
         </svg>
       </div>
 
-      {/* Hover detail panel */}
       {hoveredIndex !== null && stages[hoveredIndex] && (
-        <div className="mt-5 p-4 bg-stone-50/80 rounded-xl border border-stone-200/80 text-sm animate-fade-in">
+        <div className="mt-5 p-4 bg-white/40 backdrop-blur-sm rounded-xl border border-white/50 text-sm animate-fade-in">
           <div className="flex items-center justify-between mb-2">
             <span className="font-bold text-foreground">
               {stages[hoveredIndex].label}

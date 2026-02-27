@@ -29,9 +29,9 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
   if (!job) {
     return (
-      <div className="p-6">
-        <p className="text-stone-400">Job not found.</p>
-        <Button variant="ghost" onClick={() => router.push('/dashboard')} className="mt-2">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-6">
+        <p className="text-stone-400 mb-4">Job not found.</p>
+        <Button variant="ghost" onClick={() => router.push('/dashboard')}>
           <ArrowLeft size={14} className="mr-1.5" /> Back to Dashboard
         </Button>
       </div>
@@ -65,7 +65,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
         }
       />
 
-      <div className="p-6">
+      <div className="p-8">
         {/* Job Quick Info */}
         <div className="mb-6 flex items-center gap-6">
           <div className="flex items-center gap-2">
@@ -87,12 +87,12 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
         {/* AI Snapshot */}
         {job.aiSnapshot && (
-          <div className="mb-6 p-5 bg-gradient-to-r from-violet-50/80 via-purple-50/60 to-indigo-50/40 border border-violet-100/60 rounded-2xl">
+          <div className="mb-6 p-5 bg-gradient-to-r from-amber-50/50 via-yellow-50/30 to-orange-50/20 backdrop-blur-xl border border-amber-200/30 rounded-2xl">
             <div className="flex items-center gap-2 mb-2">
-              <Sparkles size={14} className="text-violet-600" />
-              <h3 className="text-xs font-bold text-violet-900 uppercase tracking-wider">Ideal Candidate Snapshot</h3>
+              <Sparkles size={14} className="text-amber-600" />
+              <h3 className="text-xs font-bold text-amber-900 uppercase tracking-wider">Ideal Candidate Snapshot</h3>
             </div>
-            <p className="text-sm text-violet-800/80 leading-relaxed">{job.aiSnapshot.idealCandidate}</p>
+            <p className="text-sm text-amber-800/60 leading-relaxed">{job.aiSnapshot.idealCandidate}</p>
           </div>
         )}
 

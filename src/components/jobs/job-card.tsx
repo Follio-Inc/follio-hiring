@@ -20,20 +20,20 @@ export function JobCard({ job }: JobCardProps) {
   return (
     <button
       onClick={() => router.push(`/jobs/${job.id}`)}
-      className="w-full bg-white border border-stone-200/80 rounded-2xl p-5 hover:shadow-lg hover:shadow-stone-200/40 hover:-translate-y-0.5 transition-all duration-300 text-left group"
+      className="w-full bg-white/50 backdrop-blur-xl border border-white/60 rounded-2xl p-6 hover:bg-white/70 hover:shadow-xl hover:shadow-black/[0.04] hover:-translate-y-0.5 transition-all duration-300 text-left group"
     >
       {/* Header */}
-      <div className="flex items-start justify-between mb-3">
+      <div className="flex items-start justify-between mb-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 rounded-xl bg-violet-100/80 flex items-center justify-center text-base">
+          <div className="flex items-center gap-2.5 mb-1">
+            <div className="w-8 h-8 rounded-xl bg-amber-100/60 flex items-center justify-center text-base">
               {job.roleType === 'developer' ? '💻' : job.roleType === 'designer' ? '🎨' : job.roleType === 'pm' ? '📊' : '👤'}
             </div>
-            <h3 className="font-bold text-foreground group-hover:text-violet-700 transition-colors tracking-tight">
+            <h3 className="font-bold text-foreground group-hover:text-amber-700 transition-colors tracking-tight">
               {job.title}
             </h3>
           </div>
-          <p className="text-sm text-stone-400">{job.department} · {job.experienceLevel.charAt(0).toUpperCase() + job.experienceLevel.slice(1)} level</p>
+          <p className="text-sm text-stone-400 ml-[42px]">{job.department} · {job.experienceLevel.charAt(0).toUpperCase() + job.experienceLevel.slice(1)} level</p>
         </div>
         <Badge variant={job.status === 'active' ? 'success' : 'neutral'}>
           {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
@@ -64,7 +64,7 @@ export function JobCard({ job }: JobCardProps) {
           <span
             key={stage}
             className={cn(
-              'text-xs px-2 py-0.5 rounded-full border font-medium',
+              'text-xs px-2 py-0.5 rounded-full border font-medium backdrop-blur-sm',
               STAGE_CONFIG[stage].bgColor,
               STAGE_CONFIG[stage].color,
             )}
@@ -79,7 +79,7 @@ export function JobCard({ job }: JobCardProps) {
         {job.requiredSkills.slice(0, 5).map(skill => (
           <span
             key={skill}
-            className="text-xs px-2 py-0.5 rounded-lg bg-violet-50/80 text-violet-700 font-medium"
+            className="text-xs px-2 py-0.5 rounded-lg bg-amber-50/60 text-amber-700 font-medium backdrop-blur-sm"
           >
             {skill}
           </span>

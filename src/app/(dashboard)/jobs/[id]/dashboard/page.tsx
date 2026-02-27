@@ -184,10 +184,10 @@ export default function JobDashboardPage({
         }
       />
 
-      <div className="p-6 space-y-6">
+      <div className="p-8 space-y-6">
         {/* Time filter + CSV export */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1 bg-stone-100/80 rounded-xl p-0.5">
+          <div className="flex items-center gap-1 bg-white/40 backdrop-blur-sm rounded-xl p-0.5 border border-white/50">
             {PERIOD_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
@@ -195,7 +195,7 @@ export default function JobDashboardPage({
                 className={cn(
                   'px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200',
                   period === opt.value
-                    ? 'bg-white text-foreground shadow-sm'
+                    ? 'bg-white/80 text-foreground shadow-sm backdrop-blur-sm'
                     : 'text-stone-400 hover:text-stone-600',
                 )}
               >
@@ -234,8 +234,8 @@ export default function JobDashboardPage({
         />
 
         {/* Stage Distribution Table */}
-        <div className="bg-white border border-stone-200/80 rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-stone-100">
+        <div className="bg-white/50 backdrop-blur-xl border border-white/60 rounded-2xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-white/40">
             <div className="flex items-center gap-2">
               <BarChart3 size={16} className="text-stone-400" />
               <h3 className="text-base font-bold text-foreground tracking-tight">
@@ -248,7 +248,7 @@ export default function JobDashboardPage({
           </div>
           <table className="w-full">
             <thead>
-              <tr className="border-b border-stone-100 bg-stone-50/50">
+              <tr className="border-b border-white/40 bg-white/20">
                 <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">
                   Stage
                 </th>
@@ -266,7 +266,7 @@ export default function JobDashboardPage({
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-white/30">
               {analytics.stages.map((stage) => {
                 const barWidth =
                   analytics.totalApplicants > 0
@@ -276,7 +276,7 @@ export default function JobDashboardPage({
                 return (
                   <tr
                     key={stage.stage}
-                    className="hover:bg-stone-50/80 transition-colors"
+                    className="hover:bg-white/30 transition-colors"
                   >
                     <td className="px-6 py-3">
                       <span className="text-sm font-medium text-foreground">
@@ -314,7 +314,7 @@ export default function JobDashboardPage({
                       </span>
                     </td>
                     <td className="px-6 py-3">
-                      <div className="w-full bg-stone-100 rounded-full h-2 overflow-hidden">
+                      <div className="w-full bg-white/40 rounded-full h-2 overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all duration-700"
                           style={{
@@ -347,7 +347,7 @@ export default function JobDashboardPage({
                   <span className="text-xs text-muted-foreground">—</span>
                 </td>
                 <td className="px-6 py-3">
-                  <div className="w-full bg-stone-100 rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-white/40 rounded-full h-2 overflow-hidden">
                     <div
                       className="h-full rounded-full bg-red-400 transition-all duration-700"
                       style={{

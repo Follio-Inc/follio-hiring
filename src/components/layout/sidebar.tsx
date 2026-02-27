@@ -38,15 +38,15 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 h-screen bg-white/80 backdrop-blur-xl border-r border-stone-200/80 flex flex-col fixed left-0 top-0 z-30">
+    <aside className="w-64 h-screen bg-white/40 backdrop-blur-2xl border-r border-white/50 flex flex-col fixed left-0 top-0 z-30">
       {/* Logo */}
-      <div className="h-16 flex items-center px-5 border-b border-stone-200/80">
+      <div className="h-16 flex items-center px-5 border-b border-white/40">
         <div className="flex items-center gap-2.5">
           <Image
             src="/logo.png"
             alt="Together Logo"
-            width={30}
-            height={30}
+            width={28}
+            height={28}
             className="object-contain"
           />
           <span className="text-lg font-bold tracking-tight text-foreground">
@@ -56,7 +56,7 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-4 px-3">
+      <nav className="flex-1 overflow-y-auto py-5 px-3">
         <div className="space-y-1">
           {navItems.map(item => (
             <button
@@ -65,8 +65,8 @@ export function Sidebar() {
               className={cn(
                 'w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
                 item.active
-                  ? 'bg-violet-50 text-violet-700 shadow-sm shadow-violet-100/50'
-                  : 'text-stone-500 hover:bg-stone-100/80 hover:text-stone-800'
+                  ? 'bg-amber-50/70 text-amber-800 shadow-sm shadow-amber-200/30 backdrop-blur-sm'
+                  : 'text-stone-400 hover:bg-white/50 hover:text-stone-700'
               )}
             >
               <item.icon size={18} />
@@ -76,14 +76,14 @@ export function Sidebar() {
         </div>
 
         {/* Jobs List */}
-        <div className="mt-7">
-          <div className="flex items-center justify-between px-3 mb-2.5">
+        <div className="mt-8">
+          <div className="flex items-center justify-between px-3 mb-3">
             <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-widest">
               Active Jobs
             </span>
             <button
               onClick={() => router.push('/jobs/new')}
-              className="p-1 rounded-lg hover:bg-stone-100 text-stone-400 hover:text-stone-600 transition-all duration-200"
+              className="p-1 rounded-lg hover:bg-white/50 text-stone-400 hover:text-stone-600 transition-all duration-200"
             >
               <Plus size={14} />
             </button>
@@ -97,8 +97,8 @@ export function Sidebar() {
                 className={cn(
                   'w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group',
                   pathname === `/jobs/${job.id}`
-                    ? 'bg-violet-50 text-violet-700 shadow-sm shadow-violet-100/50'
-                    : 'text-stone-500 hover:bg-stone-100/80 hover:text-stone-700'
+                    ? 'bg-amber-50/70 text-amber-800 shadow-sm shadow-amber-200/30 backdrop-blur-sm'
+                    : 'text-stone-400 hover:bg-white/50 hover:text-stone-600'
                 )}
               >
                 <div className="flex items-center gap-2 min-w-0">
@@ -121,12 +121,12 @@ export function Sidebar() {
       </nav>
 
       {/* User */}
-      <div className="border-t border-stone-200/80 p-3">
+      <div className="border-t border-white/40 p-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5 min-w-0">
             <Avatar name={user.name} size="sm" />
             <div className="min-w-0">
-              <p className="text-sm font-medium text-stone-800 truncate">{user.name}</p>
+              <p className="text-sm font-medium text-stone-700 truncate">{user.name}</p>
               <p className="text-xs text-stone-400 truncate capitalize">{user.role}</p>
             </div>
           </div>
@@ -135,7 +135,7 @@ export function Sidebar() {
               logout();
               router.push('/login');
             }}
-            className="p-1.5 rounded-lg hover:bg-stone-100 text-stone-400 hover:text-stone-600 transition-all duration-200"
+            className="p-1.5 rounded-lg hover:bg-white/50 text-stone-400 hover:text-stone-600 transition-all duration-200"
           >
             <LogOut size={16} />
           </button>

@@ -19,7 +19,7 @@ export function FitScore({ score, size = 'md', showLabel = false }: FitScoreProp
     <div className="flex items-center gap-2">
       <div
         className={cn(
-          'rounded-full flex items-center justify-center font-bold border',
+          'rounded-full flex items-center justify-center font-bold border backdrop-blur-sm',
           sizeClasses[size],
           getFitScoreBg(score),
           getFitScoreColor(score)
@@ -40,14 +40,14 @@ export function FitScoreBar({ score }: { score: number }) {
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-1">
-        <span className="text-xs text-muted-foreground">Fit Score</span>
+        <span className="text-xs text-stone-400">Fit Score</span>
         <span className={cn('text-sm font-bold', getFitScoreColor(score))}>{score}</span>
       </div>
-      <div className="w-full bg-stone-100 rounded-full h-1.5">
+      <div className="w-full bg-white/40 backdrop-blur-sm rounded-full h-1.5">
         <div
           className={cn(
-            'h-1.5 rounded-full transition-all',
-            score >= 85 ? 'bg-emerald-500' : score >= 70 ? 'bg-violet-500' : score >= 50 ? 'bg-amber-500' : 'bg-red-400'
+            'h-1.5 rounded-full transition-all duration-700',
+            score >= 85 ? 'bg-emerald-500' : score >= 70 ? 'bg-amber-500' : score >= 50 ? 'bg-orange-500' : 'bg-red-400'
           )}
           style={{ width: `${score}%` }}
         />

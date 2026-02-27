@@ -3,28 +3,27 @@
 :root {
   --background: #faf9f6;
   --foreground: #1c1917;
-  --card: #ffffff;
+  --card: rgba(255, 255, 255, 0.6);
   --card-foreground: #1c1917;
-  --muted: #f5f0eb;
+  --muted: #f5f0ea;
   --muted-foreground: #78716c;
-  --accent: #eeebff;
-  --accent-foreground: #5b21b6;
-  --primary: #5b21b6;
-  --primary-foreground: #faf9f6;
-  --secondary: #f5f0eb;
-  --secondary-foreground: #5b21b6;
+  --accent: #fffbeb;
+  --accent-foreground: #92400e;
+  --primary: #d97706;
+  --primary-foreground: #ffffff;
+  --secondary: #fef3c7;
+  --secondary-foreground: #92400e;
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --border: #e7e5e4;
+  --border: rgba(255, 255, 255, 0.4);
   --input: #d6d3d1;
-  --ring: #5b21b6;
-  --radius: 0.625rem;
+  --ring: #d97706;
+  --radius: 0.75rem;
 
-  --together-purple: #5b21b6;
-  --together-purple-light: #8b5cf6;
-  --together-purple-dark: #4c1d95;
-  --together-violet: #7c3aed;
-  --together-indigo: #6366f1;
+  --together-amber: #d97706;
+  --together-amber-light: #f59e0b;
+  --together-amber-dark: #b45309;
+  --together-gold: #eab308;
 }
 
 @theme inline {
@@ -55,17 +54,6 @@ body {
   font-feature-settings: "rlig" 1, "calt" 1;
 }
 
-/* Subtle grain overlay for atmospheric depth */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.5;
-}
-
 /* Smooth drawer animation */
 @keyframes slide-in {
   from {
@@ -79,10 +67,10 @@ body::after {
 }
 
 .animate-slide-in {
-  animation: slide-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slide-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Custom scrollbar — warm tones */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
 }
@@ -92,19 +80,19 @@ body::after {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #d6d3d1;
+  background-color: rgba(0, 0, 0, 0.08);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #a8a29e;
+  background-color: rgba(0, 0, 0, 0.15);
 }
 
 /* Dashboard animations */
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -120,7 +108,7 @@ body::after {
 @keyframes scale-in {
   from {
     opacity: 0;
-    transform: scale(0.96);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
@@ -128,18 +116,13 @@ body::after {
   }
 }
 
-@keyframes shimmer {
-  from { background-position: -200% 0; }
-  to { background-position: 200% 0; }
-}
-
 .animate-fade-in-up {
-  animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fade-in-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
 }
 
 .animate-fade-in {
-  animation: fade-in 0.4s ease-out forwards;
+  animation: fade-in 0.5s ease-out forwards;
 }
 
 .animate-scale-in {
@@ -154,8 +137,8 @@ body::after {
   border-radius: 4px;
 }
 
-/* Selection — warm purple */
+/* Selection */
 ::selection {
-  background-color: #ede9fe;
-  color: #4c1d95;
+  background-color: #fef3c7;
+  color: #78350f;
 }
