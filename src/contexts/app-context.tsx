@@ -107,7 +107,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const loadSharedApplications = () => {
+    const loadSharedData = () => {
+      fetch('/api/jobs')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && Array.isArray(data.data)) {
+            setState(prev => {
+              const existingIds = new Set(prev.jobs.map(j => j.id));
+              const newJobs = data.data.filter((j: Job) => !existingIds.has(j.id));
+              if (newJobs.length === 0) return prev;
+              return { ...prev, jobs: [...prev.jobs, ...newJobs] };
+            });
+          }
+        })
+        .catch(() => {});
+
       fetch('/api/applications')
         .then(res => res.json())
         .then(data => {
@@ -123,8 +137,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         .catch(() => {});
     };
 
-    loadSharedApplications();
-    const interval = setInterval(loadSharedApplications, 5000);
+    loadSharedData();
+    const interval = setInterval(loadSharedData, 5000);
     return () => clearInterval(interval);
   }, []);
 

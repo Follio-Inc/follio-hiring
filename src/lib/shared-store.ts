@@ -48,6 +48,36 @@ interface SharedJobRow {
   status: string;
 }
 
+export async function getSharedJobs(): Promise<Job[]> {
+  const { data: rows, error } = await supabase
+    .from('shared_jobs')
+    .select('*')
+    .eq('status', 'active');
+
+  if (error) {
+    console.error('Supabase select shared_jobs error:', error);
+    return [];
+  }
+
+  return (rows as SharedJobRow[]).map(row => ({
+    id: row.id,
+    companyId: row.company_id,
+    title: row.title,
+    department: row.department,
+    roleType: row.role_type as Job['roleType'],
+    requiredSkills: row.required_skills ?? [],
+    experienceLevel: row.experience_level as Job['experienceLevel'],
+    description: row.description,
+    mustHave: row.must_have ?? [],
+    niceToHave: row.nice_to_have ?? [],
+    createdAt: row.created_at,
+    status: 'active' as const,
+    applicantCount: 0,
+    avgFitScore: 0,
+    stageBreakdown: { new: 0, reviewing: 0, shortlisted: 0, interview: 0, offer: 0, rejected: 0 },
+  }));
+}
+
 export async function saveJobToSharedStore(job: Job, companyName: string) {
   const { error } = await supabase.from('shared_jobs').upsert({
     id: job.id,

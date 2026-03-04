@@ -1,17 +1,31 @@
 import { NextResponse } from 'next/server';
 import { mockJobs, mockCompany } from '@/lib/mock-data';
-import { saveJobToSharedStore } from '@/lib/shared-store';
+import { saveJobToSharedStore, getSharedJobs } from '@/lib/shared-store';
 import type { Job } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+  const allJobs = [...mockJobs];
+
+  try {
+    const shared = await getSharedJobs();
+    const existingIds = new Set(allJobs.map(j => j.id));
+    for (const job of shared) {
+      if (!existingIds.has(job.id)) {
+        allJobs.push(job);
+      }
+    }
+  } catch (err) {
+    console.error('Failed to read shared jobs:', err);
+  }
+
   return NextResponse.json({
     success: true,
-    data: mockJobs,
+    data: allJobs,
     meta: {
-      total: mockJobs.length,
-      active: mockJobs.filter(j => j.status === 'active').length,
+      total: allJobs.length,
+      active: allJobs.filter(j => j.status === 'active').length,
     },
   });
 }
