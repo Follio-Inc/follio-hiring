@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import {
   User, Job, Application, ApplicationStage, ApplicationNote,
 } from '@/lib/types';
@@ -106,6 +106,28 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setState(prev => ({ ...prev, compareIds: [] }));
   }, []);
 
+  useEffect(() => {
+    const loadSharedApplications = () => {
+      fetch('/api/applications')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && Array.isArray(data.data)) {
+            setState(prev => {
+              const existingIds = new Set(prev.applications.map(a => a.id));
+              const newApps = data.data.filter((a: Application) => !existingIds.has(a.id));
+              if (newApps.length === 0) return prev;
+              return { ...prev, applications: [...prev.applications, ...newApps] };
+            });
+          }
+        })
+        .catch(() => {});
+    };
+
+    loadSharedApplications();
+    const interval = setInterval(loadSharedApplications, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   const addJob = useCallback((jobData: Omit<Job, 'id' | 'companyId' | 'createdAt' | 'applicantCount' | 'avgFitScore' | 'stageBreakdown' | 'aiSnapshot'>) => {
     const newJob: Job = {
       ...jobData,
@@ -122,6 +144,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       },
     };
     setState(prev => ({ ...prev, jobs: [...prev.jobs, newJob] }));
+
+    fetch('/api/jobs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newJob),
+    }).catch(() => {});
+
     return newJob;
   }, [state.user.companyId]);
 
