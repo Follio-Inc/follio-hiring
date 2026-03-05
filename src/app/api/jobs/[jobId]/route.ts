@@ -1,22 +1,21 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase-server';
 
-export const dynamic = 'force-dynamic';
-
-export async function GET() {
+export async function GET(_request: Request, { params }: { params: Promise<{ jobId: string }> }) {
+  const { jobId } = await params;
   const supabase = await createClient();
 
-  const { data: jobs, error } = await supabase
+  const { data: job, error } = await supabase
     .from('jobs')
     .select('*, companies(id, name, logo_url, industry, size, description, website)')
-    .eq('status', 'active')
-    .order('created_at', { ascending: false });
+    .eq('id', jobId)
+    .single();
 
-  if (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  if (error || !job) {
+    return NextResponse.json({ success: false, error: 'Job not found' }, { status: 404 });
   }
 
-  const mapped = (jobs || []).map((job) => ({
+  const mapped = {
     id: job.id,
     title: job.title,
     company: job.companies
@@ -44,7 +43,7 @@ export async function GET() {
     benefits: job.benefits || [],
     status: job.status,
     createdAt: job.created_at,
-  }));
+  };
 
   return NextResponse.json({ success: true, data: mapped });
 }

@@ -9,7 +9,15 @@ import { useApp } from '@/contexts/app-context';
 
 export default function AllJobsPage() {
   const router = useRouter();
-  const { jobs } = useApp();
+  const { jobs, isLoading } = useApp();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <p className="text-stone-400 animate-pulse">Loading jobs...</p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -17,18 +25,16 @@ export default function AllJobsPage() {
         title="All Jobs"
         subtitle={`${jobs.length} jobs total`}
         actions={
-          <Button size="sm" onClick={() => router.push('/jobs/new')}>
-            <Plus size={14} className="mr-1.5" />
-            Post Job
+          <Button size="sm" onClick={() => router.push('/hiring/jobs/new')}>
+            <Plus size={14} className="mr-1.5" /> Post Job
           </Button>
         }
       />
-
       <div className="p-8">
         <div className="grid grid-cols-2 gap-5">
           {jobs.map((job, i) => (
             <div key={job.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 60}ms` }}>
-              <JobCard job={job} />
+              <JobCard job={job} basePath="/hiring" />
             </div>
           ))}
         </div>
@@ -40,9 +46,8 @@ export default function AllJobsPage() {
             </div>
             <h2 className="text-lg font-bold text-foreground mb-1 tracking-tight">No jobs posted yet</h2>
             <p className="text-sm text-stone-400 mb-5">Create your first job posting to start receiving applicants.</p>
-            <Button onClick={() => router.push('/jobs/new')}>
-              <Plus size={14} className="mr-1.5" />
-              Post your first job
+            <Button onClick={() => router.push('/hiring/jobs/new')}>
+              <Plus size={14} className="mr-1.5" /> Post your first job
             </Button>
           </div>
         )}

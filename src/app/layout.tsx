@@ -4,6 +4,8 @@ import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/auth-context";
 
+export const dynamic = 'force-dynamic';
+
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],

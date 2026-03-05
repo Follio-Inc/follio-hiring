@@ -8,9 +8,10 @@ import { cn, formatDate, getFitScoreColor } from '@/lib/utils';
 
 interface JobCardProps {
   job: Job;
+  basePath?: string;
 }
 
-export function JobCard({ job }: JobCardProps) {
+export function JobCard({ job, basePath = '' }: JobCardProps) {
   const router = useRouter();
 
   const stageEntries = Object.entries(job.stageBreakdown).filter(
@@ -19,7 +20,7 @@ export function JobCard({ job }: JobCardProps) {
 
   return (
     <button
-      onClick={() => router.push(`/jobs/${job.id}`)}
+      onClick={() => router.push(`${basePath}/jobs/${job.id}`)}
       className="w-full bg-white/50 backdrop-blur-xl border border-white/60 rounded-2xl p-6 hover:bg-white/70 hover:shadow-xl hover:shadow-black/[0.04] hover:-translate-y-0.5 transition-all duration-300 text-left group"
     >
       {/* Header */}

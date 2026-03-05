@@ -56,7 +56,7 @@ export function JobCreationForm() {
     e.preventDefault();
     if (!title.trim()) return;
     addJob({ title: title.trim(), department: department.trim() || 'General', roleType, requiredSkills, experienceLevel, description: description.trim(), mustHave, niceToHave, status: 'active' });
-    router.push('/dashboard');
+    router.push('/hiring/dashboard');
   };
 
   const inputClasses = 'w-full px-4 py-3 text-sm border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 bg-white/50 backdrop-blur-sm transition-all placeholder:text-stone-400';
