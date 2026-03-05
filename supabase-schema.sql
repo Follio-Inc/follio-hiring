@@ -105,6 +105,8 @@ CREATE TABLE IF NOT EXISTS applications (
 
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
+DECLARE
+  _company_id UUID;
 BEGIN
   INSERT INTO public.profiles (id, email, name, role)
   VALUES (
@@ -117,6 +119,13 @@ BEGIN
   IF COALESCE(NEW.raw_user_meta_data->>'role', 'candidate') = 'candidate' THEN
     INSERT INTO public.candidate_profiles (id)
     VALUES (NEW.id);
+  ELSIF NEW.raw_user_meta_data->>'company_name' IS NOT NULL THEN
+    INSERT INTO public.companies (name)
+    VALUES (NEW.raw_user_meta_data->>'company_name')
+    RETURNING id INTO _company_id;
+
+    INSERT INTO public.company_members (company_id, user_id, role)
+    VALUES (_company_id, NEW.id, 'admin');
   END IF;
 
   RETURN NEW;

@@ -46,8 +46,8 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<{ error?: string; role?: string }>;
-  signup: (name: string, email: string, password: string) => Promise<{ error?: string }>;
-  signupCompany: (params: { name: string; email: string; password: string; companyName: string }) => Promise<{ error?: string }>;
+  signup: (name: string, email: string, password: string) => Promise<{ error?: string; needsConfirmation?: boolean }>;
+  signupCompany: (params: { name: string; email: string; password: string; companyName: string }) => Promise<{ error?: string; needsConfirmation?: boolean }>;
   logout: () => Promise<void>;
   updateProfile: (data: Partial<CandidateProfileData>) => void;
   refreshProfile: () => Promise<void>;
@@ -225,16 +225,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [supabase]);
 
   const signup = useCallback(async (name: string, email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { name, role: 'candidate' } },
+      options: {
+        data: { name, role: 'candidate' },
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
     });
     if (error) return { error: error.message };
 
-    const { data: { user: supabaseUser } } = await supabase.auth.getUser();
-    if (supabaseUser) {
-      const result = await loadUserData(supabase, supabaseUser);
+    if (data.user && !data.session) {
+      return { needsConfirmation: true } as { error?: string; needsConfirmation?: boolean };
+    }
+
+    if (data.session?.user) {
+      const result = await loadUserData(supabase, data.session.user);
       if (result) {
         setUser(result.authUser);
         setProfile(result.candidateProfile);
@@ -246,31 +252,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [supabase]);
 
   const signupCompany = useCallback(async (params: { name: string; email: string; password: string; companyName: string }) => {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: params.email,
       password: params.password,
-      options: { data: { name: params.name, role: 'recruiter' } },
+      options: {
+        data: { name: params.name, role: 'recruiter', company_name: params.companyName },
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
     });
     if (error) return { error: error.message };
 
-    const { data: { user: supabaseUser } } = await supabase.auth.getUser();
-    if (!supabaseUser) return { error: 'Signup succeeded but failed to get user' };
+    const needsEmailConfirmation = data.user && !data.session;
 
-    const { data: newCompany, error: companyError } = await supabase
-      .from('companies')
-      .insert({ name: params.companyName })
-      .select()
-      .single();
+    if (needsEmailConfirmation) {
+      return { needsConfirmation: true } as { error?: string; needsConfirmation?: boolean };
+    }
 
-    if (companyError || !newCompany) return { error: companyError?.message || 'Failed to create company' };
+    if (data.session?.user) {
+      await refreshProfile();
+    }
 
-    const { error: memberError } = await supabase
-      .from('company_members')
-      .insert({ company_id: newCompany.id, user_id: supabaseUser.id, role: 'admin' });
-
-    if (memberError) return { error: memberError.message };
-
-    await refreshProfile();
     return {};
   }, [supabase, refreshProfile]);
 

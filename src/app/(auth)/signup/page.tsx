@@ -15,6 +15,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,11 +28,39 @@ export default function SignupPage() {
       setIsLoading(false);
       return;
     }
+    if (result.needsConfirmation) {
+      setShowConfirmation(true);
+      setIsLoading(false);
+      return;
+    }
     router.push('/jobs');
   };
 
   const inputClasses =
     'w-full px-4 py-3 text-sm bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all placeholder:text-stone-400';
+
+  if (showConfirmation) {
+    return (
+      <div className="min-h-screen bg-[#faf9f6] flex items-center justify-center p-8">
+        <div className="w-full max-w-[420px] text-center">
+          <Image src="/logo.png" alt="Together Logo" width={40} height={40} className="object-contain mx-auto mb-6" />
+          <div className="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center mx-auto mb-6">
+            <span className="text-3xl">✉️</span>
+          </div>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Check your email</h2>
+          <p className="text-stone-500 mb-2">
+            We sent a verification link to <span className="font-semibold text-foreground">{email}</span>
+          </p>
+          <p className="text-sm text-stone-400 mb-8">
+            Click the link in the email to activate your account and start browsing jobs.
+          </p>
+          <button onClick={() => router.push('/login')} className="text-sm text-amber-700 font-semibold hover:text-amber-800 transition-colors">
+            Go to sign in
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#faf9f6] flex items-center justify-center p-8">
