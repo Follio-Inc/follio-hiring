@@ -11,12 +11,14 @@
 ## Review
 
 - Root cause 1: `CompanyOnboarding` submit path in `src/app/(hiring)/layout.tsx` did not check Supabase errors, so failed inserts looked like "nothing happens".
-- Root cause 2: `company_members` insert RLS policy in `supabase-schema.sql` used an unaliased self-reference (`company_members.company_id`) in a subquery, which can evaluate against the inner scope and block first-member creation when rows already exist for other companies.
+- Root cause 2: `company_members` RLS used self-referential policy queries (`company_members` querying itself), which triggered `infinite recursion detected in policy for relation "company_members"`.
 - Fix 1: Added explicit error handling and user-facing error rendering in onboarding company creation.
-- Fix 2: Updated policy query to alias subquery table (`cm`) and compare against the outer row's `company_id`.
-- Added hotfix SQL file: `supabase-hotfix-company-members-policy.sql` for applying the policy update to existing Supabase environments.
+- Fix 2: Replaced recursive membership checks with `SECURITY DEFINER` helper functions (`is_company_member`, `is_company_admin`, `is_first_company_member`, `get_my_profile_email`, `has_pending_invite_for_company`) and rebuilt dependent policies to use them.
+- Fix 3: Added invite acceptance policy for invited users (`accepted_at` updates by matching email) and added explicit error handling in invite flow for membership insert + invitation update.
+- Added hotfix SQL file: `supabase-hotfix-company-members-policy.sql` containing full function + policy migration for existing Supabase environments.
 - Verification:
   - `node ./node_modules/next/dist/bin/next build` passed.
+  - `node ./node_modules/eslint/bin/eslint.js src/app/invite/[token]/page.tsx` passed.
   - `node ./node_modules/eslint/bin/eslint.js .` failed with pre-existing lint errors in unrelated files:
     - `src/app/(candidate)/profile/page.tsx`
     - `src/app/page.tsx`

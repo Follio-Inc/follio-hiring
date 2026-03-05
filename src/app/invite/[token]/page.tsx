@@ -71,17 +71,30 @@ export default function InvitePage({ params }: { params: Promise<{ token: string
       return;
     }
 
-    await supabase.from('company_members').insert({
+    const { error: addMemberError } = await supabase.from('company_members').insert({
       company_id: invitation.company_id,
       user_id: user.id,
       role: invitation.role,
       invited_by: null,
     });
 
-    await supabase
+    if (addMemberError) {
+      setError(addMemberError.message);
+      setSubmitting(false);
+      return;
+    }
+
+    const { error: markAcceptedError } = await supabase
       .from('invitations')
       .update({ accepted_at: new Date().toISOString() })
-      .eq('id', invitation.id);
+      .eq('id', invitation.id)
+      .is('accepted_at', null);
+
+    if (markAcceptedError) {
+      setError(markAcceptedError.message);
+      setSubmitting(false);
+      return;
+    }
 
     router.push('/hiring/dashboard');
   };

@@ -149,6 +149,82 @@ ALTER TABLE invitations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE jobs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE applications ENABLE ROW LEVEL SECURITY;
 
+-- Helper functions for RLS checks
+CREATE OR REPLACE FUNCTION public.is_company_member(target_company_id UUID)
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM public.company_members cm
+    WHERE cm.company_id = target_company_id
+      AND cm.user_id = auth.uid()
+  );
+$$;
+
+CREATE OR REPLACE FUNCTION public.is_company_admin(target_company_id UUID)
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM public.company_members cm
+    WHERE cm.company_id = target_company_id
+      AND cm.user_id = auth.uid()
+      AND cm.role = 'admin'
+  );
+$$;
+
+CREATE OR REPLACE FUNCTION public.is_first_company_member(target_company_id UUID)
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT NOT EXISTS (
+    SELECT 1
+    FROM public.company_members cm
+    WHERE cm.company_id = target_company_id
+  );
+$$;
+
+CREATE OR REPLACE FUNCTION public.get_my_profile_email()
+RETURNS TEXT
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT LOWER(p.email)
+  FROM public.profiles p
+  WHERE p.id = auth.uid()
+  LIMIT 1;
+$$;
+
+CREATE OR REPLACE FUNCTION public.has_pending_invite_for_company(target_company_id UUID, expected_role TEXT DEFAULT NULL)
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM public.invitations i
+    WHERE i.company_id = target_company_id
+      AND i.accepted_at IS NULL
+      AND LOWER(i.email) = public.get_my_profile_email()
+      AND (expected_role IS NULL OR i.role = expected_role)
+  );
+$$;
+
 -- Profiles: users can read all, update own
 CREATE POLICY "Anyone can read profiles" ON profiles FOR SELECT USING (true);
 CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
@@ -161,34 +237,46 @@ CREATE POLICY "Insert own candidate profile" ON candidate_profiles FOR INSERT WI
 -- Companies: readable by members, insertable by anyone (for signup)
 CREATE POLICY "Anyone can create a company" ON companies FOR INSERT WITH CHECK (true);
 CREATE POLICY "Members can read their company" ON companies FOR SELECT
-  USING (id IN (SELECT company_id FROM company_members WHERE user_id = auth.uid()));
+  USING (public.is_company_member(id));
 CREATE POLICY "Admins can update their company" ON companies FOR UPDATE
-  USING (id IN (SELECT company_id FROM company_members WHERE user_id = auth.uid() AND role = 'admin'));
+  USING (public.is_company_admin(id))
+  WITH CHECK (public.is_company_admin(id));
 
 -- Company members: members can read co-members, admins can insert
 CREATE POLICY "Members can read co-members" ON company_members FOR SELECT
-  USING (company_id IN (SELECT company_id FROM company_members WHERE user_id = auth.uid()));
+  USING (public.is_company_member(company_id));
 CREATE POLICY "Admins can add members" ON company_members FOR INSERT
-  WITH CHECK (company_id IN (SELECT company_id FROM company_members WHERE user_id = auth.uid() AND role = 'admin')
-    OR NOT EXISTS (
-      SELECT 1
-      FROM company_members cm
-      WHERE cm.company_id = company_members.company_id
-    ));
+  WITH CHECK (
+    public.is_company_admin(company_id)
+    OR (
+      user_id = auth.uid()
+      AND role = 'admin'
+      AND public.is_first_company_member(company_id)
+    )
+    OR (
+      user_id = auth.uid()
+      AND public.has_pending_invite_for_company(company_id, role)
+    )
+  );
 
--- Invitations: admins can manage, invited user can read own
+-- Invitations: admins can manage, invited users can accept
 CREATE POLICY "Admins can manage invitations" ON invitations FOR ALL
-  USING (company_id IN (SELECT company_id FROM company_members WHERE user_id = auth.uid() AND role = 'admin'));
+  USING (public.is_company_admin(company_id))
+  WITH CHECK (public.is_company_admin(company_id));
 CREATE POLICY "Anyone can read invitation by token" ON invitations FOR SELECT USING (true);
+CREATE POLICY "Invited users can accept invitation" ON invitations FOR UPDATE
+  USING (LOWER(email) = public.get_my_profile_email())
+  WITH CHECK (LOWER(email) = public.get_my_profile_email() AND accepted_at IS NOT NULL);
 
 -- Jobs: anyone can read active, company members can manage
 CREATE POLICY "Anyone can read active jobs" ON jobs FOR SELECT USING (status = 'active');
 CREATE POLICY "Company members can read all their jobs" ON jobs FOR SELECT
-  USING (company_id IN (SELECT company_id FROM company_members WHERE user_id = auth.uid()));
+  USING (public.is_company_member(company_id));
 CREATE POLICY "Company members can insert jobs" ON jobs FOR INSERT
-  WITH CHECK (company_id IN (SELECT company_id FROM company_members WHERE user_id = auth.uid()));
+  WITH CHECK (public.is_company_member(company_id));
 CREATE POLICY "Company members can update their jobs" ON jobs FOR UPDATE
-  USING (company_id IN (SELECT company_id FROM company_members WHERE user_id = auth.uid()));
+  USING (public.is_company_member(company_id))
+  WITH CHECK (public.is_company_member(company_id));
 
 -- Applications: candidates can manage own, company members can read for their jobs
 CREATE POLICY "Candidates can read own applications" ON applications FOR SELECT
@@ -196,6 +284,28 @@ CREATE POLICY "Candidates can read own applications" ON applications FOR SELECT
 CREATE POLICY "Candidates can insert applications" ON applications FOR INSERT
   WITH CHECK (candidate_id = auth.uid());
 CREATE POLICY "Company members can read applications for their jobs" ON applications FOR SELECT
-  USING (job_id IN (SELECT id FROM jobs WHERE company_id IN (SELECT company_id FROM company_members WHERE user_id = auth.uid())));
+  USING (
+    EXISTS (
+      SELECT 1
+      FROM jobs j
+      WHERE j.id = job_id
+        AND public.is_company_member(j.company_id)
+    )
+  );
 CREATE POLICY "Company members can update application stage" ON applications FOR UPDATE
-  USING (job_id IN (SELECT id FROM jobs WHERE company_id IN (SELECT company_id FROM company_members WHERE user_id = auth.uid())));
+  USING (
+    EXISTS (
+      SELECT 1
+      FROM jobs j
+      WHERE j.id = job_id
+        AND public.is_company_member(j.company_id)
+    )
+  )
+  WITH CHECK (
+    EXISTS (
+      SELECT 1
+      FROM jobs j
+      WHERE j.id = job_id
+        AND public.is_company_member(j.company_id)
+    )
+  );
