@@ -24,3 +24,23 @@
     - `src/app/page.tsx`
     - `src/components/applicants/applicant-table.tsx`
     - `src/contexts/app-context.tsx`
+
+## Feature: Company-scoped candidate portal
+
+- [x] Add candidate company selection during signup
+- [x] Add backend endpoint to list companies for signup
+- [x] Enforce company-scoped candidate job access in APIs
+- [x] Enforce company-scoped candidate access in DB policies
+- [x] Verify build and targeted lint checks
+
+## Review (Candidate Scope)
+
+- Added candidate signup company selection and passed `company_id` in signup metadata.
+- Added `GET /api/companies` backed by a security-definer DB function to return company options.
+- Candidate jobs APIs now require authenticated candidate users and filter by their selected `company_id`.
+- Updated middleware so `/jobs` routes are authenticated-only and recruiters are redirected away from candidate-only routes.
+- Updated schema + hotfix SQL with `candidate_profiles.company_id`, helper functions, trigger updates, and RLS policy updates for jobs/applications/companies.
+- Verification:
+  - `node ./node_modules/next/dist/bin/next build` passed.
+  - `node ./node_modules/eslint/bin/eslint.js` on touched files passed.
+  - Full repo lint still fails on existing unrelated files (`src/app/(candidate)/profile/page.tsx`, `src/app/page.tsx`, `src/components/applicants/applicant-table.tsx`, `src/contexts/app-context.tsx`).

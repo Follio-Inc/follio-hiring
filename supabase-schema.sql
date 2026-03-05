@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS profiles (
 -- 2. Candidate-specific profile data
 CREATE TABLE IF NOT EXISTS candidate_profiles (
   id UUID PRIMARY KEY REFERENCES profiles(id) ON DELETE CASCADE,
+  company_id UUID,
   location TEXT,
   experience_level TEXT DEFAULT 'mid',
   role_preferences TEXT[] DEFAULT '{}',
@@ -39,6 +40,23 @@ CREATE TABLE IF NOT EXISTS companies (
   website TEXT,
   created_at TIMESTAMPTZ DEFAULT now()
 );
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint
+    WHERE conname = 'candidate_profiles_company_id_fkey'
+  ) THEN
+    ALTER TABLE candidate_profiles
+      ADD CONSTRAINT candidate_profiles_company_id_fkey
+      FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE SET NULL;
+  END IF;
+END
+$$;
+
+CREATE INDEX IF NOT EXISTS idx_candidate_profiles_company_id
+  ON candidate_profiles(company_id);
 
 -- 4. Company members (many recruiters per company)
 CREATE TABLE IF NOT EXISTS company_members (
@@ -107,6 +125,7 @@ CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 DECLARE
   _company_id UUID;
+  _candidate_company_id UUID;
 BEGIN
   INSERT INTO public.profiles (id, email, name, role)
   VALUES (
@@ -117,8 +136,15 @@ BEGIN
   );
 
   IF COALESCE(NEW.raw_user_meta_data->>'role', 'candidate') = 'candidate' THEN
-    INSERT INTO public.candidate_profiles (id)
-    VALUES (NEW.id);
+    BEGIN
+      _candidate_company_id := NULLIF(NEW.raw_user_meta_data->>'company_id', '')::UUID;
+    EXCEPTION
+      WHEN OTHERS THEN
+        _candidate_company_id := NULL;
+    END;
+
+    INSERT INTO public.candidate_profiles (id, company_id)
+    VALUES (NEW.id, _candidate_company_id);
   ELSIF NEW.raw_user_meta_data->>'company_name' IS NOT NULL THEN
     INSERT INTO public.companies (name)
     VALUES (NEW.raw_user_meta_data->>'company_name')
@@ -225,6 +251,31 @@ AS $$
   );
 $$;
 
+CREATE OR REPLACE FUNCTION public.get_candidate_company_id()
+RETURNS UUID
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT cp.company_id
+  FROM public.candidate_profiles cp
+  WHERE cp.id = auth.uid()
+  LIMIT 1;
+$$;
+
+CREATE OR REPLACE FUNCTION public.list_companies_for_signup()
+RETURNS TABLE(id UUID, name TEXT)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT c.id, c.name
+  FROM public.companies c
+  ORDER BY c.name ASC;
+$$;
+
 -- Profiles: users can read all, update own
 CREATE POLICY "Anyone can read profiles" ON profiles FOR SELECT USING (true);
 CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
@@ -237,7 +288,7 @@ CREATE POLICY "Insert own candidate profile" ON candidate_profiles FOR INSERT WI
 -- Companies: readable by members, insertable by anyone (for signup)
 CREATE POLICY "Anyone can create a company" ON companies FOR INSERT WITH CHECK (true);
 CREATE POLICY "Members can read their company" ON companies FOR SELECT
-  USING (public.is_company_member(id));
+  USING (public.is_company_member(id) OR id = public.get_candidate_company_id());
 CREATE POLICY "Admins can update their company" ON companies FOR UPDATE
   USING (public.is_company_admin(id))
   WITH CHECK (public.is_company_admin(id));
@@ -268,8 +319,9 @@ CREATE POLICY "Invited users can accept invitation" ON invitations FOR UPDATE
   USING (LOWER(email) = public.get_my_profile_email())
   WITH CHECK (LOWER(email) = public.get_my_profile_email() AND accepted_at IS NOT NULL);
 
--- Jobs: anyone can read active, company members can manage
-CREATE POLICY "Anyone can read active jobs" ON jobs FOR SELECT USING (status = 'active');
+-- Jobs: candidates read active jobs for selected company, company members can manage
+CREATE POLICY "Candidates can read active jobs in selected company" ON jobs FOR SELECT
+  USING (status = 'active' AND company_id = public.get_candidate_company_id());
 CREATE POLICY "Company members can read all their jobs" ON jobs FOR SELECT
   USING (public.is_company_member(company_id));
 CREATE POLICY "Company members can insert jobs" ON jobs FOR INSERT
@@ -282,7 +334,16 @@ CREATE POLICY "Company members can update their jobs" ON jobs FOR UPDATE
 CREATE POLICY "Candidates can read own applications" ON applications FOR SELECT
   USING (candidate_id = auth.uid());
 CREATE POLICY "Candidates can insert applications" ON applications FOR INSERT
-  WITH CHECK (candidate_id = auth.uid());
+  WITH CHECK (
+    candidate_id = auth.uid()
+    AND EXISTS (
+      SELECT 1
+      FROM jobs j
+      WHERE j.id = job_id
+        AND j.status = 'active'
+        AND j.company_id = public.get_candidate_company_id()
+    )
+  );
 CREATE POLICY "Company members can read applications for their jobs" ON applications FOR SELECT
   USING (
     EXISTS (

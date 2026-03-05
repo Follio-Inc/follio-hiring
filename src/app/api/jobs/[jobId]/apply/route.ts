@@ -23,10 +23,24 @@ export async function POST(request: Request, { params }: { params: Promise<{ job
     return NextResponse.json({ success: false, error: 'Only candidates can apply' }, { status: 403 });
   }
 
+  const { data: candidateProfile } = await supabase
+    .from('candidate_profiles')
+    .select('company_id')
+    .eq('id', user.id)
+    .single();
+
+  if (!candidateProfile?.company_id) {
+    return NextResponse.json(
+      { success: false, error: 'No company is selected for your candidate profile.' },
+      { status: 400 },
+    );
+  }
+
   const { data: job } = await supabase
     .from('jobs')
     .select('id')
     .eq('id', jobId)
+    .eq('company_id', candidateProfile.company_id)
     .eq('status', 'active')
     .single();
 

@@ -7,7 +7,6 @@ import { useAuth } from '@/contexts/auth-context';
 import { GlassCard } from '@/components/ui/glass-card';
 import { Button } from '@/components/ui/button';
 import { TextArea } from '@/components/ui/input';
-import { FitScoreRing } from '@/components/ui/fit-score';
 import { formatSalary, formatRelativeDate, formatFullDate } from '@/lib/utils';
 import type { CandidateJob } from '@/lib/candidate-types';
 import {
@@ -32,6 +31,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ jobId: str
   const { user } = useAuth();
   const [job, setJob] = useState<CandidateJob | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [showApplyForm, setShowApplyForm] = useState(false);
   const [coverNote, setCoverNote] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -41,9 +41,15 @@ export default function JobDetailPage({ params }: { params: Promise<{ jobId: str
     fetch(`/api/jobs/${jobId}`)
       .then((res) => res.json())
       .then((res) => {
-        if (res.success && res.data) setJob(res.data);
+        if (res.success && res.data) {
+          setJob(res.data);
+          return;
+        }
+        if (res.error) setError(res.error);
       })
-      .catch(() => {})
+      .catch(() => {
+        setError('Unable to load job details right now.');
+      })
       .finally(() => setLoading(false));
   }, [jobId]);
 
@@ -59,7 +65,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ jobId: str
     return (
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
         <h1 className="text-2xl font-bold text-stone-800">Role not found</h1>
-        <p className="text-stone-500 mt-2">This job posting may have been removed.</p>
+        <p className="text-stone-500 mt-2">{error || 'This job posting may have been removed.'}</p>
         <Link href="/jobs" className="mt-4 inline-block">
           <Button variant="secondary">Browse all roles</Button>
         </Link>

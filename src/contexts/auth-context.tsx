@@ -16,6 +16,7 @@ interface AuthUser {
 interface CandidateProfileData {
   id: string;
   name?: string;
+  companyId?: string | null;
   location: string;
   experienceLevel: string;
   rolePreferences: string[];
@@ -46,7 +47,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<{ error?: string; role?: string }>;
-  signup: (name: string, email: string, password: string) => Promise<{ error?: string; needsConfirmation?: boolean }>;
+  signup: (name: string, email: string, password: string, companyId: string) => Promise<{ error?: string; needsConfirmation?: boolean }>;
   signupCompany: (params: { name: string; email: string; password: string; companyName: string }) => Promise<{ error?: string; needsConfirmation?: boolean }>;
   logout: () => Promise<void>;
   updateProfile: (data: Partial<CandidateProfileData>) => void;
@@ -90,6 +91,7 @@ async function loadUserData(supabase: ReturnType<typeof createClient>, supabaseU
         id: cp.id,
         email: profileRow.email,
         name: profileRow.name,
+        companyId: cp.company_id ?? null,
         location: cp.location ?? '',
         experienceLevel: cp.experience_level ?? 'mid',
         rolePreferences: cp.role_preferences ?? [],
@@ -224,12 +226,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return {};
   }, [supabase]);
 
-  const signup = useCallback(async (name: string, email: string, password: string) => {
+  const signup = useCallback(async (name: string, email: string, password: string, companyId: string) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { name, role: 'candidate' },
+        data: { name, role: 'candidate', company_id: companyId },
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
@@ -300,6 +302,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (data.githubUrl !== undefined) dbData.github_url = data.githubUrl;
       if (data.linkedinUrl !== undefined) dbData.linkedin_url = data.linkedinUrl;
       if (data.resumeUrl !== undefined) dbData.resume_url = data.resumeUrl;
+      if (data.companyId !== undefined) dbData.company_id = data.companyId;
 
       supabase.from('candidate_profiles').update(dbData).eq('id', user.id).then(() => {});
 

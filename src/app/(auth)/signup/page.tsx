@@ -1,11 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/auth-context';
+
+interface CompanyOption {
+  id: string;
+  name: string;
+}
 
 export default function SignupPage() {
   const router = useRouter();
@@ -13,16 +18,36 @@ export default function SignupPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [companyId, setCompanyId] = useState('');
+  const [companies, setCompanies] = useState<CompanyOption[]>([]);
+  const [loadingCompanies, setLoadingCompanies] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
 
+  useEffect(() => {
+    fetch('/api/companies')
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success && Array.isArray(res.data)) {
+          setCompanies(res.data);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoadingCompanies(false));
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!companyId) {
+      setError('Please select a company.');
+      return;
+    }
+
     setIsLoading(true);
     setError('');
 
-    const result = await signup(name, email, password);
+    const result = await signup(name, email, password, companyId);
     if (result.error) {
       setError(result.error);
       setIsLoading(false);
@@ -87,13 +112,32 @@ export default function SignupPage() {
             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className={inputClasses} placeholder="you@example.com" required />
           </div>
           <div>
+            <label className="block text-sm font-medium text-foreground mb-2">Company</label>
+            <select
+              value={companyId}
+              onChange={(e) => setCompanyId(e.target.value)}
+              className={inputClasses}
+              required
+              disabled={loadingCompanies || companies.length === 0}
+            >
+              <option value="">
+                {loadingCompanies ? 'Loading companies...' : companies.length === 0 ? 'No companies available' : 'Select a company'}
+              </option>
+              {companies.map((company) => (
+                <option key={company.id} value={company.id}>
+                  {company.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
             <label className="block text-sm font-medium text-foreground mb-2">Password</label>
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className={inputClasses} placeholder="Create a password (min 6 chars)" required minLength={6} />
           </div>
 
           {error && <p className="text-sm text-red-600 font-medium">{error}</p>}
 
-          <Button type="submit" className="w-full !py-3 !rounded-xl !text-[15px]" size="lg" disabled={isLoading}>
+          <Button type="submit" className="w-full !py-3 !rounded-xl !text-[15px]" size="lg" disabled={isLoading || loadingCompanies || companies.length === 0}>
             {isLoading ? 'Creating account...' : 'Create account'}
             {!isLoading && <ArrowRight size={16} className="ml-2" />}
           </Button>

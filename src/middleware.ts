@@ -38,7 +38,6 @@ export async function middleware(request: NextRequest) {
   const publicPaths = ['/', '/login', '/signup', '/invite'];
   const isPublic =
     publicPaths.some((p) => pathname === p) ||
-    pathname.startsWith('/jobs') ||
     pathname.startsWith('/signup/') ||
     pathname.startsWith('/invite/') ||
     pathname.startsWith('/auth/');
@@ -72,7 +71,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    const candidateOnlyPaths = ['/dashboard', '/profile'];
+    const candidateOnlyPaths = ['/dashboard', '/profile', '/jobs'];
     if (candidateOnlyPaths.some((p) => pathname === p || pathname.startsWith(p + '/')) && role === 'recruiter') {
       const url = request.nextUrl.clone();
       url.pathname = '/hiring/dashboard';

@@ -5,10 +5,42 @@ export async function GET(_request: Request, { params }: { params: Promise<{ job
   const { jobId } = await params;
   const supabase = await createClient();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 });
+  }
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  if (profile?.role !== 'candidate') {
+    return NextResponse.json({ success: false, error: 'Only candidates can view jobs' }, { status: 403 });
+  }
+
+  const { data: candidateProfile } = await supabase
+    .from('candidate_profiles')
+    .select('company_id')
+    .eq('id', user.id)
+    .single();
+
+  if (!candidateProfile?.company_id) {
+    return NextResponse.json(
+      { success: false, error: 'No company is selected for your candidate profile.' },
+      { status: 400 },
+    );
+  }
+
   const { data: job, error } = await supabase
     .from('jobs')
     .select('*, companies(id, name, logo_url, industry, size, description, website)')
     .eq('id', jobId)
+    .eq('company_id', candidateProfile.company_id)
     .single();
 
   if (error || !job) {

@@ -42,6 +42,7 @@ export default function JobsPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [allJobs, setAllJobs] = useState<CandidateJob[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetch('/api/jobs')
@@ -49,9 +50,13 @@ export default function JobsPage() {
       .then((res) => {
         if (res.success && Array.isArray(res.data)) {
           setAllJobs(res.data);
+          return;
         }
+        if (res.error) setError(res.error);
       })
-      .catch(() => {})
+      .catch(() => {
+        setError('Unable to load jobs right now.');
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -85,6 +90,14 @@ export default function JobsPage() {
     return (
       <div className="max-w-5xl mx-auto px-4 py-20 text-center">
         <p className="text-stone-500">Loading jobs...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-5xl mx-auto px-4 py-20 text-center">
+        <p className="text-stone-600 font-medium">{error}</p>
       </div>
     );
   }
