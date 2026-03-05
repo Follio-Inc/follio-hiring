@@ -170,7 +170,11 @@ CREATE POLICY "Members can read co-members" ON company_members FOR SELECT
   USING (company_id IN (SELECT company_id FROM company_members WHERE user_id = auth.uid()));
 CREATE POLICY "Admins can add members" ON company_members FOR INSERT
   WITH CHECK (company_id IN (SELECT company_id FROM company_members WHERE user_id = auth.uid() AND role = 'admin')
-    OR NOT EXISTS (SELECT 1 FROM company_members WHERE company_id = company_members.company_id));
+    OR NOT EXISTS (
+      SELECT 1
+      FROM company_members cm
+      WHERE cm.company_id = company_members.company_id
+    ));
 
 -- Invitations: admins can manage, invited user can read own
 CREATE POLICY "Admins can manage invitations" ON invitations FOR ALL

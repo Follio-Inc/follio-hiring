@@ -13,29 +13,46 @@ import { createClient } from '@/lib/supabase-client';
 function CompanyOnboarding() {
   const [companyName, setCompanyName] = useState('');
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
   const { user, refreshProfile } = useAuth();
   const supabase = createClient();
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!companyName.trim() || !user) return;
+
     setSaving(true);
+    setError('');
 
-    const { data: newCompany } = await supabase
-      .from('companies')
-      .insert({ name: companyName.trim() })
-      .select()
-      .single();
+    try {
+      const { data: newCompany, error: createCompanyError } = await supabase
+        .from('companies')
+        .insert({ name: companyName.trim() })
+        .select('id')
+        .single();
 
-    if (newCompany) {
-      await supabase.from('company_members').insert({
+      if (createCompanyError || !newCompany) {
+        setError(createCompanyError?.message ?? 'Unable to create company. Please try again.');
+        return;
+      }
+
+      const { error: addMemberError } = await supabase.from('company_members').insert({
         company_id: newCompany.id,
         user_id: user.id,
         role: 'admin',
       });
+
+      if (addMemberError) {
+        setError(addMemberError.message);
+        return;
+      }
+
       await refreshProfile();
+    } catch {
+      setError('Unable to create company right now. Please try again.');
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
   };
 
   return (
@@ -57,6 +74,7 @@ function CompanyOnboarding() {
             className="w-full px-4 py-3 text-sm bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all placeholder:text-stone-400"
             required
           />
+          {error && <p className="text-sm text-red-600 font-medium">{error}</p>}
           <Button type="submit" className="w-full !py-3 !rounded-xl" isLoading={saving} disabled={!companyName.trim()}>
             Create company
           </Button>
